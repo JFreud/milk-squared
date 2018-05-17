@@ -1,17 +1,7 @@
-<VirtualHost *:80>
-             ServerName 204.48.24.108
+#!/usr/bin/python
 
-             WSGIScriptAlias / /var/www/deploytest/deploytest.wsgi
+import sys
 
-             <Directory /var/www/deploytest/deploytest/>
-                        Order allow,deny
-                        Allow from all
-             </Directory>
+sys.path.insert(0,"/var/www/deploytest/")
 
-             Alias /static /var/www/deploytest/deploytest/static
-             <Directory /var/www/deploytest/deploytest/static/>
-                        Order allow,deny
-                        Allow from all
-            </Directory>
-
-</VirtualHost>
+from deploytest import app as application
