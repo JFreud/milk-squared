@@ -4,3 +4,6 @@ made devlog
 goldmanJ -- 2018-05-21 14:04:59
 began working on gameutils.py
 
+tiffanyC -- 2018-05-21 18:28:15
+finished some stuff for the database - will work more later
+
