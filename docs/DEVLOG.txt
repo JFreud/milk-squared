@@ -1,3 +1,6 @@
 goldmanJ -- 2018-05-21 13:44:31
 made devlog
 
+goldmanJ -- 2018-05-21 14:04:59
+began working on gameutils.py
+
