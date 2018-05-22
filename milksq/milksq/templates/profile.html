@@ -8,18 +8,83 @@
   <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
   
   <title>Profile</title>
-
-  <div class="blog-masthead">
+  
+  <div class="blog-masthead" >
     <h1>milksquared</h1>
-    <div id="userinfo">
-      <h2>Profile</h2>
-      Username:
-      <br> other stuff... </br>
-    </div>
-    
   </div>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!-- navbar !-->
+  <nav class="nav navbar-toggleable-md nav-lt">
+    <a class="nav-link active" href="search.html">Search</a>
+    <a class="nav-link" href="profile.html">Profile</a>
+    <a class="nav-link" href="mkgame.html">New Game</a>
+  </nav>
+
 </head>
 <body>
+  <div id="userinfo">
+    <h2>Profile</h2>
+    Username:
+    <br> other stuff... 
+  </div>
+  
+  <div class="container">
+    <ul class="nav nav-tabs" role="tablist" id="tabs">
+      <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">stats</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">Play</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">Admin</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="stats" class="tab-pane fade in active">
+	<h3>Stats</h3>
+	<svg id="chart"></svg>
+	<ul>Games You've Played:
+	  <li>blah</li>
+	  <li>bleh</li>
+	  <li>blih</li>
+	</ul>
+	<ul>Games You're Playing:
+	  <li> kjkjkshdh </li>
+	</ul>
+      </div>
+      <div id="play" class="tab-pane fade">
+	<h3>Games You're Playing</h3>
+	<ul id="playing">
+	  <li><a href="#">link to game1</a></li>
+	  <li><a href="#">link to game2</a></li>
+	  <li><a href="#">link to game3</a></li>
+	  <li><a href="#">link to game4</a></li>
+	</ul>
+      </div>
+      <div id="admin" class="tab-pane fade">
+	<h3>Games You're Managing</h3>
+	<ul id="managing">
+	  <li><a href="#">link to game1</a></li>
+	  <li><a href="#">link to game2</a></li>
+	  <li><a href="#">link to game3</a></li>
+	  <li><a href="#">link to game4</a></li>
+	</ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    $('#tabs a').on('click', function (e) {
+    e.preventDefault()
+    $(this).tab('show')
+    })
+
+    $('#tabs a[href="#stats"]').tab('show')
+    $('#tabs a[href="#play"]').tab('show') 
+    $('#tabs li:first-child a').tab('show')
+    $('#tabs li:last-child a').tab('show')
+    $('#tabs li:nth-child(3) a').tab('show') 
+  </script>
+  
   <script src="../static/stuff.js"></script>
 </body>
 </html>

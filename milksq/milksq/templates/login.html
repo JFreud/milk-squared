@@ -1,0 +1,35 @@
+<! DOCTYPE HTML>
+<html>
+  <head>
+    
+    <!-- bootstrap !-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    
+    <!-- custom style for website !-->
+    <link rel="stylesheet" href="/static/style.css">
+
+    <title>  Login  </title>
+  </head>
+
+  <body>
+<div class="container-1">
+    <form class="signin" method="POST" action ="/login">
+
+      Username:<br>
+      <input type="text" name="username" required><br><br>
+
+      Password: <br>
+      <input type="password" name="password" required><br><br>
+      <input type="submit" value="submit" class = "button2"> <br> <br>
+    </form>
+
+    <form method="GET" action="/login">
+      Don't have an account?
+      <input  type="submit" value = "Register" class = "button1">
+    </form>
+    <a href="/">Back<a>
+
+</div>
+</center>
+</body>
+</html>

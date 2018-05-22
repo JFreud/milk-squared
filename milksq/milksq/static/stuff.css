@@ -1,0 +1,43 @@
+.blog-masthead{
+    padding: 0px;
+    //background-color:#004B8D;
+    //color: #95DEE3;
+}
+
+body{
+    //background-color:#EDCDC2;
+}
+
+div{
+    padding: 25px;
+}
+
+h1{
+    font: 40px Times;
+    font-weight: "bold";
+    //padding:10px;
+    //color: #DC4C46;
+}
+
+h2{
+    font: 30px Courier;
+    //color:#F6D155;
+}
+
+
+head{
+    //background-color:#034F84;
+}
+
+#p1{
+    //color: #F6D155;
+}
+
+#p2{
+    //color: #95DEE3;
+}
+
+.nav-lt{
+    //background-color: seashell;
+    //color: DarkSlateGrey;
+}
