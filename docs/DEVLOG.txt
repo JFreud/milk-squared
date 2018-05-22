@@ -7,3 +7,6 @@ began working on gameutils.py
 tiffanyC -- 2018-05-21 18:28:15
 finished some stuff for the database - will work more later
 
+tiffanyC -- 2018-05-21 22:59:57
+added some get functions to database
+

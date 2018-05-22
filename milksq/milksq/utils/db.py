@@ -60,6 +60,14 @@ def crGame(adminID, key, typ, startDate, endDate, title, descr):
     c.execute(cm)
     closeDatabase()
 
+def deleteGame(gameID):
+    db, c = openDatabase()
+    cm = "DELETE FROM games WHERE gameID = %d" %gameID
+    c.execute(cm)
+    cm = "DELETE FROM players WHERE gameID = %d" %gameID
+    c.execute(cm)
+    closeDatabase()
+
 # END FUNCTIONS
 
 
@@ -68,9 +76,34 @@ def crGame(adminID, key, typ, startDate, endDate, title, descr):
 
 def getUserID(username):
     db, c = openDatabase()
-    cm = 'SELECT id FROM userInfo WHERE user = "%s";' %username
+    cm = 'SELECT userID FROM users WHERE username = "%s";' %username
     for i in c.execute(cm):
         x = i[0]
     closeDatabase(db)
     return x
 
+def getTarget(userID, gameID):
+    db, c = openDatabase()
+    cm = 'SELECT target FROM players WHERE userID = %d AND gameID = %d;' %(userID, gameID)
+    for i in c.execute(cm):
+        x = i[0]
+    closeDatabase(db)
+    return x
+
+def getGameStats(gameID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM gamestats WHERE gameID = %d;' %gameID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[0])
+    closeDatabase(db)
+    return listy[1:]
+
+def getLifetimeStats(userID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM userstats WHERE userID = %d;' %userID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[0])
+    closeDatabase(db)
+    return listy[1:]
