@@ -1,7 +1,24 @@
+import sqlite3
+
 def createDatabase():
     db, c = openDatabase()
-    cm = "CREATE TABLE users ()"
-    cm = "CREATE TABLE games ()"
+    cm = "CREATE TABLE users (userID INTEGER PRIMARY KEY, username TEXT, password TEXT, name TEXT, pfp TEXT"
+    for i in userStatList():
+        cm += ", " + i[0] + " " + i[1]
+    cm += ")"
+    c.execute(cm)
+    cm = "CREATE TABLE games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT"
+    for i in rulesForGame():
+        cm += ", " + i[0] + " " + i[1]
+    for i in gameStatList():
+        cm += ", " + i[0] + " " + i[1]
+    cm += ")"
+    c.execute(cm)
+    cm = "CREATE TABLE players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER)"
+    c.execute(cm)
+    cm = "CREATE TABLE kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT);"
+    c.execute(cm)
+    closeDatabase(db)
 
 def openDatabase():
     f="../data/database.db"
@@ -13,10 +30,13 @@ def closeDatabase(db):
     db.close()  #close database
 
 def gameStatList():
-    return []
+    return [["numberLeft", "INTEGER"], ["totalKills", "INTEGER"], ["mostKillsPerDay", "TEXT"], ["mostKillsTotal", "TEXT"], ["mostKillsToday", "TEXT"]]
 
 def userStatList():
-    return []
+    return [["averageKillsPerGame", "REAL"], ["averageDailyKills", "REAL"]]
+
+def rulesForGame():
+    return [["maxNumOfPeople", "INTEGER"], ["safeZones", "TEXT"]]
 
 # FUNCTIONS!!!
 
@@ -134,3 +154,4 @@ def getLifetimeStats(userID):
     closeDatabase(db)
     return listy[1:]
 
+createDatabase()
