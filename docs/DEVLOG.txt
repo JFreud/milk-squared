@@ -13,3 +13,6 @@ added some get functions to database
 goldmanJ -- 2018-05-22 13:02:57
 finished writing target assignment function, now we just need the corresponding database functionality
 
+goldmanJ -- 2018-05-22 13:59:35
+redid database schema (in design doc)
+
