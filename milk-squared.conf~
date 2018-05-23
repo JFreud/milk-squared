@@ -1,7 +1,7 @@
 <VirtualHost *:80>
              ServerName 204.48.24.108
 
-             WSGIScriptAlias / /var/www/deploytest/deploytest.wsgi
+             WSGIScriptAlias / /var/www/milk-squared/milk-squared.wsgi
 
              <Directory /var/www/deploytest/deploytest/>
                         Order allow,deny
