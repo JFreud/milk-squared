@@ -5,7 +5,7 @@ import sqlite3
 # from utils import db
 
 my_app = Flask(__name__)
-my_app.secret_key = urandom(64)
+#my_app.secret_key = urandom(64)
 
 DIR = path.dirname(__file__)
 #console output will appear in /var/log/apache2/error.log
