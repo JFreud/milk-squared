@@ -92,5 +92,5 @@ def profile():
 
 
 if __name__ == "__main__":
-    my_app.debug = True #DANGER DANGER! Set to FALSE before deployment!
+    my_app.debug = False #DANGER DANGER! Set to FALSE before deployment!
     my_app.run()
