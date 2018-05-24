@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 import json, urllib2, sys
 from os import path, urandom
 import sqlite3
-# from utils import db
+from utils import db
 
 my_app = Flask(__name__)
 #my_app.secret_key = urandom(64)
@@ -34,7 +34,21 @@ def create_account():
 def login():
     if "user" in session:
         return redirect(url_for('root'))
-    return render_template('login.html')
+    if method == "GET":
+        return render_template('login.html')
+    else:
+        user = request.form['username']
+        passw = request.form['password']
+        if not db.checkUsername(user) :
+            flash("invalid username")
+            return redirect(url_for('login'))   
+        elif not db.verify(user,passw):
+            flash("invalid password")
+            return redirect(url_for('login'))
+        else:
+            session['user'] = user
+            return redirect(url_for('root'))
+
 
 # ==================== AUTHENTICATE =======================
 # Verifies login
