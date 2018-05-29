@@ -111,6 +111,14 @@ def getUserID(username):
     closeDatabase(db)
     return x
 
+def getName(username):
+    db, c = openDatabase()
+    cm = 'SELECT name FROM users WHERE username == "%s";' %username
+    for i in c.execute(cm):
+        x = i[0]
+    closeDatabase(db)
+    return x
+
 def getTarget(userID, gameID):
     db, c = openDatabase()
     cm = 'SELECT target FROM players WHERE userID == %d AND gameID == %d;' %(userID, gameID)
@@ -151,6 +159,15 @@ def getLifetimeStats(userID):
         listy.append(i[0])
     closeDatabase(db)
     return listy[1:]
+
+def getGames(userID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM games WHERE managerID == %d;' %userID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[0])
+        closeDatabase(db)
+    return listy[1:] 
 
 #createDatabase()
 #register("la","la234","lala")

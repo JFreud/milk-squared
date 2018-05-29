@@ -18,7 +18,13 @@ def root():
     if "user" not in session:
         return redirect(url_for('login'))
     # return render_template("login.html")
-    return render_template('home.html')
+    return render_template('index.html')
+
+@my_app.route('/feed')
+def feed():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    return render_template("feed.html")
 
 # ==================== CREATE ACCOUNT =======================
 @my_app.route('/register', methods=['GET','POST'])
@@ -62,10 +68,21 @@ def login():
 # Enters all the game info and stuff
 # Form fields: ...
 
-@my_app.route('/crgame')
+@my_app.route('/mkgame')
 def mkgame():
    if "user" not in session:
        return redirect(url_for('login'))
+   elif request.method == "POST":
+       username = session['user']
+       gameMode = request.form['gameMode']
+       startDate = request.form['startDate']
+       endDate = request.form['endDate']
+       adminID = db.getUserID(username)
+       joinKey = request.form['joinKey']
+       title = request.form['title']
+       description = request.form['description']
+       db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
+       return redirect(url_for('profile'))
    else:
        return render_template("mkgame.html")
 
@@ -99,7 +116,11 @@ def search():
 def profile():
     if "user" not in session:
         return redirect(url_for('login'))
-    return render_template("profile.html")
+    username = session['user']
+    userID = db.getUserID(username)
+    name = db.getName(username)
+    games = db.getGames(userID)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games)
 
 
 

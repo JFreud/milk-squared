@@ -1,11 +1,14 @@
+
+
 .blog-masthead{
-    padding: 0px;
-    //background-color:#004B8D;
-    //color: #95DEE3;
+    padding: 10px;
+    background-color:#578CA9;
+    color: #95DEE3;
 }
 
 body{
-    //background-color:#EDCDC2;
+    background-color:#cddce5;
+    color: #004B8D;
 }
 
 div{
@@ -13,15 +16,22 @@ div{
 }
 
 h1{
-    font: 40px Times;
-    font-weight: "bold";
-    //padding:10px;
+    padding:10px;
+    font-family: 'Georgia';
+    font-size: 45px;
+    font-weight: bold;
+    margin: 0;
     //color: #DC4C46;
 }
 
 h2{
     font: 30px Courier;
-    //color:#F6D155;
+    font-weight: bold;
+    color:#F2552C;
+}
+
+h3{
+    font: 
 }
 
 
@@ -38,6 +48,14 @@ head{
 }
 
 .nav-lt{
-    //background-color: seashell;
-    //color: DarkSlateGrey;
+    background-color: seashell;
+    color: DarkSlateGrey;
+}
+
+.tabby-container{
+    background-color:seashell;
+    margin: 20px;
+    border-width: 5px;
+    border-style:solid;
+    border-color:#F2552C;
 }

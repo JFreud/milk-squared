@@ -9,29 +9,30 @@
   
   <title>Profile</title>
   
-  <div class="blog-masthead" >
-    <h1>milksquared</h1>
-  </div>
-  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  
-  <!-- navbar !-->
-  <nav class="nav navbar-toggleable-md nav-lt">
-    <a class="nav-link active" href="/search">Search</a>
-    <a class="nav-link" href="/profile">Profile</a>
-    <a class="nav-link" href="/mkgame">New Game</a>
-  </nav>
+
+  <div class="blog-masthead" >
+    <h1>milksquared</h1>
+    <!-- navbar !-->
+    <nav class="nav navbar-toggleable-md nav-lt">
+      <a class="nav-link active" href="/search">Search</a>
+      <a class="nav-link" href="/profile">Profile</a>
+      <a class="nav-link" href="/mkgame">New Game</a>
+      <a class="nav-link" href="/feed">Feed</a>
+    </nav>
+  </div>
 
 </head>
 <body>
   <div id="userinfo">
     <h2>Profile</h2>
-    Username:
-    <br> other stuff... 
+    Name: {{name}} <br>
+    Username: {{username}} <br>
+    UserID: {{userID}} <br>
   </div>
   
-  <div class="container">
+  <div class="tabby-container">
     <ul class="nav nav-tabs" role="tablist" id="tabs">
       <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">stats</a></li>
       <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">Play</a></li>
@@ -63,10 +64,9 @@
       <div id="admin" class="tab-pane fade">
 	<h3>Games You're Managing</h3>
 	<ul id="managing">
-	  <li><a href="#">link to game1</a></li>
-	  <li><a href="#">link to game2</a></li>
-	  <li><a href="#">link to game3</a></li>
-	  <li><a href="#">link to game4</a></li>
+	  {% for game in games %}
+	  <li> game </li>
+	  {% endfor %}
 	</ul>
       </div>
     </div>

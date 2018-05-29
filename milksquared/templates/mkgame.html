@@ -1,0 +1,61 @@
+<!Doctype html>
+<head>
+
+  <!-- bootstrap !-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+
+  <!-- custom style for website !-->
+  <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
+  
+  <title>Search</title>
+  
+  <div class="blog-masthead" >
+    <h1>milksquared</h1>
+
+    <!-- navbar !-->
+    <nav class="nav navbar-toggleable-md nav-lt">
+      <a class="nav-link active" href="/search">Search</a>
+      <a class="nav-link" href="/profile">Profile</a>
+      <a class="nav-link" href="/mkgame">New Game</a>
+      <a class="nav-link" href="/feed">Feed</a>
+    </nav>
+  </div>
+
+</head>
+<body>
+  <div class="container-1">
+    <div class="form-group" method="POST" action="/mkgame">
+
+      Game Type:<br>
+      <select name="gameMode" class="form-control">
+	<option>Assassins</option>
+	<option>Secret Santa</option>
+	<option>Coming Soon...</option>
+      </select>
+      <br>
+      Start Date (month/day/year):<br>
+      ex: 07/16/2000<br>
+      <input type="text" name="startDate" required><br><br>
+
+      End Date (month/day/year) <br>
+      ex: 07/16/2000: <br>
+      <input type="text" name="endDate" required><br><br>
+
+      Join Key: <br>
+      <input type="text" name="joinKey" required><br><br>
+
+      Title: <br>
+      <input type="text" name="title" required><br><br>
+
+      Description: <br>
+      <input type="text" name="description" required><br><br>
+      
+      <input type="submit" value="submit" class="button2"> <br> <br>
+    </div>
+
+  </div>
+  <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+
+</body>
+</html>
