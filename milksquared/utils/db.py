@@ -2,26 +2,25 @@ import sqlite3
 
 def createDatabase():
     db, c = openDatabase()
-    cm = "CREATE TABLE users (userID INTEGER PRIMARY KEY, username TEXT, password TEXT, name TEXT, pfp TEXT"
-    for i in userStatList():
-        cm += ", " + i[0] + " " + i[1]
-    cm += ")"
+    cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT);"
+    #for i in userStatList():
+        #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
-    cm = "CREATE TABLE games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT"
-    for i in rulesForGame():
-        cm += ", " + i[0] + " " + i[1]
-    for i in gameStatList():
-        cm += ", " + i[0] + " " + i[1]
-    cm += ")"
+    cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, dateStart BLOB, dateEnd BLOB, title TEXT, description TEXT);"
+    #for i in rulesForGame():
+        #cm += ", " + i[0] + " " + i[1]
+    #for i in gameStatList():
+        #cm += ", " + i[0] + " " + i[1]
+    #cm += ");"
     c.execute(cm)
-    cm = "CREATE TABLE players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER)"
+    cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER);"
     c.execute(cm)
-    cm = "CREATE TABLE kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT);"
+    cm = "CREATE TABLE  IF NOT EXISTS kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled BLOB, timeKilled BLOB);"
     c.execute(cm)
     closeDatabase(db)
 
 def openDatabase():
-    f="../data/database.db"
+    f="data/database.db"
     db = sqlite3.connect(f) #open if f exists, otherwise create
     return db, db.cursor()    #facilitate db ops
 
@@ -44,11 +43,11 @@ def checkUsernames(username):
     #checks if username is taken
     #returns True if username is taken, returns False if username is not taken
     db, c = openDatabase()
-    cm = "SELECT user FROM users;"
+    cm = "SELECT * FROM users WHERE username=='"+ username +"';"
     for i in c.execute(cm):
-        if username == i[0].encode("ascii"):
-            closeDatabase(db)
-            return True
+        #if username == i[0].encode("ascii"):
+            #closeDatabase(db)
+        return True
     closeDatabase(db)
     return False
 
@@ -58,14 +57,13 @@ def register(username, password, name):
     cm = "SELECT COUNT(*) FROM users;"
     for i in c.execute(cm):
         userID = i[0]
-    cm = 'INSERT INTO users VALUES("%s", "%s", %d, "%s", "");' %(username, password, userID, name)
-    c.execute(cm)
+    c.execute("INSERT INTO users VALUES(?,?,?,?)",[userID, username, password, name])
     closeDatabase(db)
 
 def verify(username, password):
     #checks whether a person's password matches their username
     db, c = openDatabase()
-    cm = 'SELECT password FROM users WHERE user == "%s";' %username
+    cm = 'SELECT password FROM users WHERE username == "%s";' %username
     x = c.execute(cm)
     for i in x:
         true_pass = i
@@ -154,4 +152,5 @@ def getLifetimeStats(userID):
     closeDatabase(db)
     return listy[1:]
 
-createDatabase()
+#createDatabase()
+#register("la","la234","lala")

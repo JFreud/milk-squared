@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
-import json, urllib2, sys
 from os import path, urandom
-import sqlite3
 from utils import db
+import json, urllib2, sys, sqlite3
 
 my_app = Flask(__name__)
-#my_app.secret_key = urandom(64)
+my_app.secret_key = urandom(64)
 
 DIR = path.dirname(__file__)
 #console output will appear in /var/log/apache2/error.log
@@ -19,13 +18,22 @@ def root():
     if "user" not in session:
         return redirect(url_for('login'))
     # return render_template("login.html")
-    return render_template("home.html")
+    return render_template('home.html')
 
 # ==================== CREATE ACCOUNT =======================
+@my_app.route('/register', methods=['GET','POST'])
 # Account creation (duh)
-def create_account():
+def register():
     # do db stuff and make account
-    return redirect(url_for('login'))
+    if request.method == "GET":
+        return render_template('register.html')
+    else:
+        user = request.form['username']
+        passw = request.form['password']
+        name = request.form['name']
+        if not db.checkUsernames(user):
+            db.register(user,passw,name)
+            return redirect(url_for('login'))
 
 # ==================== LOGIN =======================
 # Login Page
@@ -34,12 +42,12 @@ def create_account():
 def login():
     if "user" in session:
         return redirect(url_for('root'))
-    if method == "GET":
+    if request.method == "GET":
         return render_template('login.html')
     else:
         user = request.form['username']
         passw = request.form['password']
-        if not db.checkUsername(user) :
+        if not db.checkUsernames(user) :
             flash("invalid username")
             return redirect(url_for('login'))   
         elif not db.verify(user,passw):
@@ -49,32 +57,17 @@ def login():
             session['user'] = user
             return redirect(url_for('root'))
 
-
-# ==================== AUTHENTICATE =======================
-# Verifies login
-@my_app.route('/authenticate', methods=['POST'])
-def authenticate():
-    # if login
-    return redirect(url_for('root'))
-    #else
-    #flash error
-
 # ==================== CREATE GAME =======================
 # Page for the user to create the game
 # Enters all the game info and stuff
 # Form fields: ...
 
-@my_app.route('/create_game')
-def create_game():
-    return "INSERT CREATE GAME"
-
-# ==================== INIT GAME =======================
-# Route that takes response to form and creates the game
-
-@my_app.route('/init_game', methods=['POST'])
-def init_game():
-    # CREATE GAME AND STUFF
-    return redirect(url_for("game"))
+@my_app.route('/crgame')
+def mkgame():
+   if "user" not in session:
+       return redirect(url_for('login'))
+   else:
+       return render_template("mkgame.html")
 
 # ==================== GAME =======================
 # Main game page that will have the game info and description
@@ -83,7 +76,9 @@ def init_game():
 
 @my_app.route('/game')
 def game():
-    return "INSERT GAME INFO"
+    if "user" not in session:
+        return redirect(url_for('login'))
+    return render_template("vwgame.html")
 
 # ==================== SEARCH =======================
 # Search option for games and users
@@ -93,18 +88,22 @@ def game():
 def search():
     # DO THE SEARCH
     # DROPDOWN ON SEARCH BAR
-    return redirect(url_for('profile'))
+    if "user" not in session:
+        return redirect(url_for('login'))
+    return render_template("search.html")
 
 # ==================== PROFILE =======================
 # User Profile with info and stats and stuff
 
 @my_app.route('/profile')
 def profile():
-    return "INSERT USER PROFILE"
+    if "user" not in session:
+        return redirect(url_for('login'))
+    return render_template("profile.html")
 
 
 
 
 if __name__ == "__main__":
-    my_app.debug = False #DANGER DANGER! Set to FALSE before deployment!
+    my_app.debug = True #DANGER DANGER! Set to FALSE before deployment!
     my_app.run()
