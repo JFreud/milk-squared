@@ -6,9 +6,9 @@
 
   <!-- custom style for website !-->
   <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
-  
+
   <title>Profile</title>
-  
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -20,6 +20,7 @@
       <a class="nav-link" href="/profile">Profile</a>
       <a class="nav-link" href="/mkgame">New Game</a>
       <a class="nav-link" href="/feed">Feed</a>
+      <a class="nav-link" href="/logout">Logout</a>
     </nav>
   </div>
 
@@ -31,7 +32,7 @@
     Username: {{username}} <br>
     UserID: {{userID}} <br>
   </div>
-  
+
   <div class="tabby-container">
     <ul class="nav nav-tabs" role="tablist" id="tabs">
       <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">stats</a></li>
@@ -71,7 +72,7 @@
       </div>
     </div>
   </div>
-  
+
   <script>
     $('#tabs a').on('click', function (e) {
     e.preventDefault()
@@ -79,12 +80,12 @@
     })
 
     $('#tabs a[href="#stats"]').tab('show')
-    $('#tabs a[href="#play"]').tab('show') 
+    $('#tabs a[href="#play"]').tab('show')
     $('#tabs li:first-child a').tab('show')
     $('#tabs li:last-child a').tab('show')
-    $('#tabs li:nth-child(3) a').tab('show') 
+    $('#tabs li:nth-child(3) a').tab('show')
   </script>
-  
+
   <script src="../static/stuff.js"></script>
 </body>
 </html>

@@ -41,6 +41,17 @@ def register():
             db.register(user,passw,name)
             return redirect(url_for('login'))
 
+
+@my_app.route('/user_creation', methods=['POST'])
+def user_creation():
+    user = request.form['username']
+    pw = request.form['password']
+    pw_confirm = request.form['confirm']
+    if not db.checkUsernames(user) and pw == pw_confirm:
+        db.register(user,pw,10)
+        return redirect(url_for('login'))
+
+
 # ==================== LOGIN =======================
 # Login Page
 
@@ -55,7 +66,7 @@ def login():
         passw = request.form['password']
         if not db.checkUsernames(user) :
             flash("invalid username")
-            return redirect(url_for('login'))   
+            return redirect(url_for('login'))
         elif not db.verify(user,passw):
             flash("invalid password")
             return redirect(url_for('login'))
@@ -63,33 +74,60 @@ def login():
             session['user'] = user
             return redirect(url_for('root'))
 
+@my_app.route('/logout')
+def logout():
+    if "user" in session:
+        username = session.pop('user')
+        flash ("Logged out " + username)
+        return redirect(url_for('login'))
+    else:
+        return redirect(url_for('root'))
+
+
 # ==================== CREATE GAME =======================
 # Page for the user to create the game
 # Enters all the game info and stuff
 # Form fields: ...
 
+#The form
 @my_app.route('/mkgame')
 def mkgame():
    if "user" not in session:
        return redirect(url_for('login'))
-   elif request.method == "POST":
-       username = session['user']
-       gameMode = request.form['gameMode']
-       startDate = request.form['startDate']
-       endDate = request.form['endDate']
-       adminID = db.getUserID(username)
-       joinKey = request.form['joinKey']
-       title = request.form['title']
-       description = request.form['description']
-       db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
-       return redirect(url_for('profile'))
+   # elif request.method == "POST":
+   #     username = session['user']
+   #     gameMode = request.form['gameMode']
+   #     startDate = request.form['startDate']
+   #     endDate = request.form['endDate']
+   #     adminID = db.getUserID(username)
+   #     joinKey = request.form['joinKey']
+   #     title = request.form['title']
+   #     description = request.form['description']
+   #     db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
+   #     return redirect(url_for('profile'))
    else:
        return render_template("mkgame.html")
+
+
+#This one actually makes it
+@my_app.route('/game_creation', methods=["POST"])
+def create_game():
+    username = session['user']
+    gameMode = request.form['gameMode']
+    startDate = request.form['startDate']
+    endDate = request.form['endDate']
+    adminID = db.getUserID(username)
+    joinKey = request.form['joinKey']
+    title = request.form['title']
+    description = request.form['description']
+    db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
+    return redirect(url_for('profile'))
 
 # ==================== GAME =======================
 # Main game page that will have the game info and description
 # Things on it: who's left, leaderboard, game feed
 # Will have link to stats
+
 
 @my_app.route('/game')
 def game():

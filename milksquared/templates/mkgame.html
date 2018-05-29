@@ -6,9 +6,9 @@
 
   <!-- custom style for website !-->
   <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
-  
+
   <title>Search</title>
-  
+
   <div class="blog-masthead" >
     <h1>milksquared</h1>
 
@@ -18,13 +18,15 @@
       <a class="nav-link" href="/profile">Profile</a>
       <a class="nav-link" href="/mkgame">New Game</a>
       <a class="nav-link" href="/feed">Feed</a>
+      <a class="nav-link" href="/logout">Logout</a>
     </nav>
   </div>
 
 </head>
 <body>
   <div class="container-1">
-    <div class="form-group" method="POST" action="/mkgame">
+    <!-- <div class="form-group" method="POST" action="/game_creation"> -->
+      <form method = "POST" action="/game_creation">
 
       Game Type:<br>
       <select name="gameMode" class="form-control">
@@ -49,9 +51,9 @@
 
       Description: <br>
       <input type="text" name="description" required><br><br>
-      
-      <input type="submit" value="submit" class="button2"> <br> <br>
-    </div>
+
+      <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">Submit</button>
+    </form>
 
   </div>
   <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>

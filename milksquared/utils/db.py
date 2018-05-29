@@ -51,7 +51,7 @@ def checkUsernames(username):
     closeDatabase(db)
     return False
 
-def register(username, password, name): 
+def register(username, password, name):
     #adds a new record in the users table with the username, password, name, and a userID (found in function)
     db, c = openDatabase()
     cm = "SELECT COUNT(*) FROM users;"
@@ -85,9 +85,9 @@ def crGame(adminID, key, typ, startDate, endDate, title, descr):
     cm = "SELECT COUNT(*) FROM games;"
     for i in c.execute(cm):
         gameID = i[0]
-    cm = 'INSERT INTO games VALUES(%d, %d, "%s", "%s", %d, "%s", "%s", "%s", "%s");' %(gameID, adminID, key, typ, startDate, endDate, title, descr)
+    cm = 'INSERT INTO games VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s");' %(adminID, key, typ, startDate, endDate, title, descr)
     c.execute(cm)
-    closeDatabase()
+    closeDatabase(db)
 
 def deleteGame(gameID):
     db, c = openDatabase()
@@ -95,7 +95,7 @@ def deleteGame(gameID):
     c.execute(cm)
     cm = "DELETE FROM players WHERE gameID == %d" %gameID
     c.execute(cm)
-    closeDatabase()
+    closeDatabase(db)
 
 # END FUNCTIONS
 
@@ -167,7 +167,7 @@ def getGames(userID):
     for i in c.execute(cm):
         listy.append(i[0])
         closeDatabase(db)
-    return listy[1:] 
+    return listy[1:]
 
 #createDatabase()
 #register("la","la234","lala")
