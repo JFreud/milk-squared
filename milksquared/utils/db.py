@@ -1,5 +1,8 @@
 import sqlite3
 
+
+
+# DATABSE CREATION/EDITING
 def createDatabase():
     db, c = openDatabase()
     cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT);"
@@ -40,8 +43,14 @@ def userStatList():
 def rulesForGame():
     return [["maxNumOfPeople", "INTEGER"], ["safeZones", "TEXT"]]
 
+
+
+
+
 # FUNCTIONS!!!
 
+
+# AUTHENTICATION
 def checkUsernames(username):
     #checks if username is taken
     #returns True if username is taken, returns False if username is not taken
@@ -82,6 +91,10 @@ def changePass(username, oldPass, newPass):
     closeDatabase(db)
     return True
 
+
+
+
+# GAME MANAGEMENT
 def crGame(adminID, key, typ, startDate, endDate, title, descr):
     #creates a game in the games table
     db, c = openDatabase()
