@@ -25,7 +25,7 @@ def createDatabase():
     closeDatabase(db)
 
 def openDatabase():
-    f = os.path.dirname(__file__) + "data/database.db"
+    f = os.path.dirname(__file__) + "/../data/database.db"
     db = sqlite3.connect(f) #open if f exists, otherwise create
     return db, db.cursor()    #facilitate db ops
 
