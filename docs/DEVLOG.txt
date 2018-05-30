@@ -19,3 +19,9 @@ redid database schema (in design doc)
 tiffanyC -- 2018-05-22 19:10:28
 made database and worked on some database functions
 
+tiffanyC -- 2018-05-30 01:00:12
+so... a lot of things happened
+first, flash messages now work in login page and profile
+second, the user can now put in certain rules for games, along w customization for different assassins games and secret santa stuff
+third, idk, i just cleaned up some stuff
+

@@ -6,16 +6,19 @@ def createDatabase():
     #for i in userStatList():
         #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
-    cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, dateStart BLOB, dateEnd BLOB, title TEXT, description TEXT);"
+    cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, type INTEGER, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT);"
     #for i in rulesForGame():
         #cm += ", " + i[0] + " " + i[1]
     #for i in gameStatList():
         #cm += ", " + i[0] + " " + i[1]
-    #cm += ");"
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER);"
     c.execute(cm)
-    cm = "CREATE TABLE  IF NOT EXISTS kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled BLOB, timeKilled BLOB);"
+    cm = "CREATE TABLE IF NOT EXISTS kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT);"
+    c.execute(cm)
+    cm = "CREATE TABLE IF NOT EXISTS rulesA (gameID INTEGER, type INTEGER, maxPeople INTEGER, safeZones TEXT);"
+    c.execute(cm)
+    cm = "CREATE TABLE IF NOT EXISTS rulesSS (gameID INTEGER, maxPeople INTEGER, spendingLimit INTEGER);"
     c.execute(cm)
     closeDatabase(db)
 
@@ -85,15 +88,28 @@ def crGame(adminID, key, typ, startDate, endDate, title, descr):
     cm = "SELECT COUNT(*) FROM games;"
     for i in c.execute(cm):
         gameID = i[0]
-    cm = 'INSERT INTO games VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s");' %(adminID, key, typ, startDate, endDate, title, descr)
+    cm = 'INSERT INTO games VALUES(%d, %d, "%s", "%s", "%s", "%s", "%s", "%s");' %(gameID, adminID, key, typ, startDate, endDate, title, descr)
     c.execute(cm)
     closeDatabase(db)
+    return gameID
 
 def deleteGame(gameID):
     db, c = openDatabase()
     cm = "DELETE FROM games WHERE gameID == %d" %gameID
     c.execute(cm)
     cm = "DELETE FROM players WHERE gameID == %d" %gameID
+    c.execute(cm)
+    closeDatabase(db)
+
+def crRulesA(gameID, typ, maxPeople, safeZones):
+    db, c = openDatabase()
+    cm = 'INSERT INTO rulesA VALUES (%d, %d, %d, "%s");' %(gameID, typ, maxPeople, safeZones)
+    c.execute(cm)
+    closeDatabase(db)
+
+def crRulesSS(gameID, maxPeople, spending):
+    db, c = openDatabase()
+    cm = 'INSERT INTO rulesSS VALUES (%d, %d, %d);' %(gameID, maxPeople, spending)
     c.execute(cm)
     closeDatabase(db)
 
@@ -166,8 +182,8 @@ def getGames(userID):
     listy = []
     for i in c.execute(cm):
         listy.append(i[0])
-        closeDatabase(db)
-    return listy[1:]
+    closeDatabase(db)
+    return listy
 
 #createDatabase()
 #register("la","la234","lala")
