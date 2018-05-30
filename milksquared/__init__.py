@@ -31,15 +31,21 @@ def feed():
 # Account creation (duh)
 def register():
     # do db stuff and make account
-    if request.method == "GET":
-        return render_template('register.html')
-    else:
+    #if request.method == "GET":
+    return render_template('register.html')
+    '''else:
         user = request.form['username']
         passw = request.form['password']
-        name = request.form['name']
+
+        conf = request.form['confirm']
+        print user, name, passw, conf
+        if not passw == conf:
+            flash("Passwords do not match.")
+            return render_template('register.html')
         if not db.checkUsernames(user):
             db.register(user,passw,name)
-            return redirect(url_for('login'))
+            return redirect(url_for('login'))'''
+
 
 
 @my_app.route('/user_creation', methods=['POST'])
@@ -47,8 +53,15 @@ def user_creation():
     user = request.form['username']
     pw = request.form['password']
     pw_confirm = request.form['confirm']
-    if not db.checkUsernames(user) and pw == pw_confirm:
-        db.register(user,pw,10)
+    name = request.form['name']
+    if db.checkUsernames(user):
+        flash("Username already exists.")
+        return redirect(url_for('register'))
+    elif not pw == pw_confirm:
+        flash("Passwords do not match.")
+        return redirect(url_for('register'))
+    else:
+        db.register(user,pw,name)
         return redirect(url_for('login'))
 
 
@@ -65,10 +78,10 @@ def login():
         user = request.form['username']
         passw = request.form['password']
         if not db.checkUsernames(user) :
-            flash("invalid username")
+            flash("Invalid username")
             return redirect(url_for('login'))
         elif not db.verify(user,passw):
-            flash("invalid password")
+            flash("Invalid password")
             return redirect(url_for('login'))
         else:
             session['user'] = user
@@ -112,6 +125,8 @@ def mkgame():
 #This one actually makes it
 @my_app.route('/game_creation', methods=["POST"])
 def create_game():
+    if "user" not in session:
+       return redirect(url_for('login'))
     username = session['user']
     gameMode = request.form['gameMode']
     startDate = request.form['startDate']
@@ -120,7 +135,37 @@ def create_game():
     joinKey = request.form['joinKey']
     title = request.form['title']
     description = request.form['description']
-    db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
+    if gameMode == "Assassins - Rapid Fire":
+        typ = 0
+    elif gameMode == "Assassins - Last Man Standing":
+        typ = 1
+    elif gameMode == "Secret Santa":
+        typ = 2
+    gameID = db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
+    session['game'] = gameID
+    session["gameType"] = typ
+    return render_template("rules.html", gameType = typ)
+
+@my_app.route('/rule_creation', methods=["POST"])
+def create_rules():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    if "game" not in session or "gameType" not in session:
+        flash("Please try again.")
+        return redirect(url_for("profile"))
+    if "maxPeople" in request.form:
+        gameMode = session['gameType']
+        gameID = session["game"]
+        if gameMode == 0 or gameMode == 1:
+            maxPeople = int(request.form['maxPeople'])
+            safeZones = request.form['safeZones']
+            db.crRulesA(session["game"], gameMode, maxPeople, safeZones)
+        elif gameMode == 2:
+            maxPeople = int(request.form['maxPeople'])
+            spending = int(request.form['spending'])
+            db.crRulesSS(session["game"], maxPeople, spending)
+    else:
+        db.deleteGame(session["game"])
     return redirect(url_for('profile'))
 
 # ==================== GAME =======================
