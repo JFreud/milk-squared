@@ -1,7 +1,5 @@
 import sqlite3
 
-
-
 # DATABSE CREATION/EDITING
 def createDatabase():
     db, c = openDatabase()
@@ -194,7 +192,23 @@ def getGames(userID):
     cm = 'SELECT * FROM games WHERE managerID == %d;' %userID
     listy = []
     for i in c.execute(cm):
-        listy.append(i[0])
+        listy.append(i[6])
+    closeDatabase(db)
+    return listy
+
+def getTitle(gameID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM games WHERE gameID == %d;' %userID
+    for i in c.execute(cm):
+        closeDatabase(db)
+        return i[6]
+    
+def getPlaying(userID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM players WHERE userID == %d;' %userID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(getTitle(i[0]))
     closeDatabase(db)
     return listy
 

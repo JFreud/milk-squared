@@ -203,7 +203,8 @@ def profile():
     userID = db.getUserID(username)
     name = db.getName(username)
     games = db.getGames(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games)
+    playing = db.getPlaying(userID)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing)
 
 
 

@@ -28,7 +28,6 @@
 <body>
 
   {% set messages = get_flashed_messages() %}
-
   {% for message in messages %}
     <h3>{{message}}</h3>
   {% endfor %}
@@ -52,28 +51,24 @@
 	<h3>Stats</h3>
 	<svg id="chart"></svg>
 	<ul>Games You've Played:
-	  <li>blah</li>
-	  <li>bleh</li>
-	  <li>blih</li>
-	</ul>
-	<ul>Games You're Playing:
-	  <li> kjkjkshdh </li>
+	  {% for game in games %}
+	  <il>{{game}}</li>
+{% endfor %}
 	</ul>
       </div>
       <div id="play" class="tab-pane fade">
 	<h3>Games You're Playing</h3>
 	<ul id="playing">
-	  <li><a href="#">link to game1</a></li>
-	  <li><a href="#">link to game2</a></li>
-	  <li><a href="#">link to game3</a></li>
-	  <li><a href="#">link to game4</a></li>
+	  {% for game in playing %}
+	  <li> {{game}} </li>
+	  {% endfor %}
 	</ul>
       </div>
       <div id="admin" class="tab-pane fade">
 	<h3>Games You're Managing</h3>
 	<ul id="managing">
 	  {% for game in games %}
-	  <li> game </li>
+	  <li> {{game}} </li>
 	  {% endfor %}
 	</ul>
       </div>
