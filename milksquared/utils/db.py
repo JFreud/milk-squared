@@ -1,5 +1,5 @@
 import sqlite3
-
+import os
 
 
 # DATABSE CREATION/EDITING
@@ -26,7 +26,7 @@ def createDatabase():
     closeDatabase(db)
 
 def openDatabase():
-    f="data/database.db"
+    f = os.path.dirname(__file__) + "data/database.db"
     db = sqlite3.connect(f) #open if f exists, otherwise create
     return db, db.cursor()    #facilitate db ops
 
