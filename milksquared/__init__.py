@@ -4,7 +4,7 @@ from utils import db
 import json, urllib2, sys, sqlite3
 
 my_app = Flask(__name__)
-my_app.secret_key = urandom(64)
+my_app.secret_key = 'i dont have a secret key'
 
 DIR = path.dirname(__file__)
 #console output will appear in /var/log/apache2/error.log
