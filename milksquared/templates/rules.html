@@ -1,63 +1,44 @@
-<!Doctype html>
-<head>
+{% extends "base.html" %}
 
-  <!-- bootstrap !-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+{% block title %}
+Rules
+{% endblock %}
 
-  <!-- custom style for website !-->
-  <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
+{% block body %}
+<div class="container-1">
+  <!-- <div class="form-group" method="POST" action="/game_creation"> -->
+  <form method = "POST" action="/rule_creation">
 
-  <title>Search</title>
+    {% if gameType == 0 or gameType == 1 %}
+    Max number of people:<br>
+    <input type="text" name="maxPeople" required><br><br>
 
-  <div class="blog-masthead" >
-    <h1>milksquared</h1>
+    Safe zones <br>
+    ex: Cafeteria, library <br>
+    <input type="text" name="safeZones" required><br><br>
 
-    <!-- navbar !-->
-    <nav class="nav navbar-toggleable-md nav-lt">
-      <a class="nav-link active" href="/search">Search</a>
-      <a class="nav-link" href="/profile">Profile</a>
-      <a class="nav-link" href="/mkgame">New Game</a>
-      <a class="nav-link" href="/feed">Feed</a>
-      <a class="nav-link" href="/logout">Logout</a>
-    </nav>
-  </div>
 
-</head>
-<body>
-  <div class="container-1">
-    <!-- <div class="form-group" method="POST" action="/game_creation"> -->
-      <form method = "POST" action="/rule_creation">
 
-      {% if gameType == 0 or gameType == 1 %}
+    {% elif gameType == 2 %}
+    Max number of people:<br>
+    <input type="text" name="maxPeople" required><br><br>
 
-      Max number of people:<br>
-      <input type="text" name="maxPeople" required><br><br>
+    Spending limit:<br>
+    Please omit the $ in your answer!<br>
+    <input type="text" name="spending" required><br><br>
+    {% endif %}
 
-      Safe zones <br>
-      ex: Cafeteria, library <br>
-      <input type="text" name="safeZones" required><br><br>
+    <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">Submit</button>
+  </form>
 
-      {% elif gameType == 2 %}
-
-      Max number of people:<br>
-      <input type="text" name="maxPeople" required><br><br>
-
-      Spending limit:<br>
-      Please omit the $ in your answer!<br>
-      <input type="text" name="spending" required><br><br>
-
-      {% endif %}
-
-      <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">Submit</button>
-    </form>
-
-    <form method = "POST" action="/rule_creation">
+  <form method = "POST" action="/rule_creation">
     <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">I don't want to create this game anymore!</button>
-    </form>
+  </form>
 
-  </div>
-  <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+</div>
+{% endblock %}
 
-</body>
-</html>
+{% block js %}
+<script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+{% endblock %}

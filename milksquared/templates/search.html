@@ -1,34 +1,13 @@
-<!Doctype html>
-<head>
+{% extends "base.html" %}
 
-  <!-- bootstrap !-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+{% block title %}
+Rules
+{% endblock %}
 
-  <!-- custom style for website !-->
-  <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
-
-  <title>Search</title>
-
-  <div class="blog-masthead" >
-    <h1>milksquared</h1>
-
-    <!-- navbar !-->
-    <nav class="nav navbar-toggleable-md nav-lt">
-      <a class="nav-link active" href="/search">Search</a>
-      <a class="nav-link" href="/profile">Profile</a>
-      <a class="nav-link" href="/mkgame">New Game</a>
-      <a class="nav-link" href="/feed">Feed</a>
-      <a class="nav-link" href="/logout">Logout</a>
-    </nav>
-  </div>
-
-</head>
-<body>
-  <h2>Search</h2>
-  <ul id="searchResults">
-    <li> result#1 </li>
-    <li><a href="#">game result link</a> </li>
-  </ul>
-  <script src="../static/stuff.js"></script>
-</body>
-</html>
+{% block body %}
+<h2>Search</h2>
+<ul id="searchResults">
+  <li> result#1 </li>
+  <li><a href="#">game result link</a> </li>
+</ul>
+{% endblock %}

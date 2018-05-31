@@ -1,93 +1,76 @@
-<!Doctype html>
-<head>
+{% extends "base.html" %}
 
-  <!-- bootstrap !-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+{% block title %}
+Profile
+{% endblock %}
 
-  <!-- custom style for website !-->
-  <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
+{% block body %}
 
-  <title>Profile</title>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-  <div class="blog-masthead" >
-    <h1>milksquared</h1>
-    <!-- navbar !-->
-    <nav class="nav navbar-toggleable-md nav-lt">
-      <a class="nav-link active" href="/search">Search</a>
-      <a class="nav-link" href="/profile">Profile</a>
-      <a class="nav-link" href="/mkgame">New Game</a>
-      <a class="nav-link" href="/feed">Feed</a>
-      <a class="nav-link" href="/logout">Logout</a>
-    </nav>
-  </div>
-
-</head>
-<body>
-
-  {% set messages = get_flashed_messages() %}
-  {% for message in messages %}
-    <h3>{{message}}</h3>
-  {% endfor %}
-
-  <div id="userinfo">
-    <h2>Profile</h2>
-    Name: {{name}} <br>
-    Username: {{username}} <br>
-    UserID: {{userID}} <br>
-  </div>
-
-  <div class="tabby-container">
-    <ul class="nav nav-tabs" role="tablist" id="tabs">
-      <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">stats</a></li>
-      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">Play</a></li>
-      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">Admin</a></li>
-    </ul>
-
-    <div class="tab-content">
-      <div id="stats" class="tab-pane fade in active">
-	<h3>Stats</h3>
-	<svg id="chart"></svg>
-	<ul>Games You've Played:
-	  {% for game in games %}
-	  <il>{{game}}</li>
+{% set messages = get_flashed_messages() %}
+{% for message in messages %}
+  <h3>{{message}}</h3>
 {% endfor %}
-	</ul>
-      </div>
-      <div id="play" class="tab-pane fade">
-	<h3>Games You're Playing</h3>
-	<ul id="playing">
-	  {% for game in playing %}
-	  <li> {{game}} </li>
-	  {% endfor %}
-	</ul>
-      </div>
-      <div id="admin" class="tab-pane fade">
-	<h3>Games You're Managing</h3>
-	<ul id="managing">
-	  {% for game in games %}
-	  <li> {{game}} </li>
-	  {% endfor %}
-	</ul>
-      </div>
+
+<div id="userinfo">
+  <h2>Profile</h2>
+  Name: {{name}} <br>
+  Username: {{username}} <br>
+  UserID: {{userID}} <br>
+</div>
+
+<div class="tabby-container">
+  <ul class="nav nav-tabs" role="tablist" id="tabs">
+    <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">stats</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">Play</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">Admin</a></li>
+  </ul>
+
+  <div class="tab-content">
+
+    <div id="stats" class="tab-pane fade in active">
+      <h3>Stats</h3>
+      <svg id="chart"></svg>
+      <ul>Games You've Played:
+        {% for game in games %}
+        <li>{{game}}</li>
+        {% endfor %}
+      </ul>
     </div>
+
+    <div id="play" class="tab-pane fade">
+      <h3>Games You're Playing</h3>
+      <ul id="playing">
+        {% for game in playing %}
+        <li> {{game}} </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div id="admin" class="tab-pane fade">
+      <h3>Games You're Managing</h3>
+      <ul id="managing">
+        {% for game in games %}
+        <li> {{game}} </li>
+        {% endfor %}
+      </ul>
+    </div>
+
   </div>
 
-  <script>
-    $('#tabs a').on('click', function (e) {
-    e.preventDefault()
-    $(this).tab('show')
-    })
+</div>
+{% endblock %}
 
-    $('#tabs a[href="#stats"]').tab('show')
-    $('#tabs a[href="#play"]').tab('show')
-    $('#tabs li:first-child a').tab('show')
-    $('#tabs li:last-child a').tab('show')
-    $('#tabs li:nth-child(3) a').tab('show')
-  </script>
+{% block js %}
+<script>
+  $('#tabs a').on('click', function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+  })
 
-  <script src="../static/stuff.js"></script>
-</body>
-</html>
+  $('#tabs a[href="#stats"]').tab('show')
+  $('#tabs a[href="#play"]').tab('show')
+  $('#tabs li:first-child a').tab('show')
+  $('#tabs li:last-child a').tab('show')
+  $('#tabs li:nth-child(3) a').tab('show')
+</script>
+{% endblock %}

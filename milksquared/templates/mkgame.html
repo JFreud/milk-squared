@@ -1,65 +1,46 @@
-<!Doctype html>
-<head>
+{% extends "base.html" %}
 
-  <!-- bootstrap !-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+{% block title %}
+Make Game
+{% endblock %}
 
-  <!-- custom style for website !-->
-  <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
+{% block body %}
+<div class="container-1">
+  <!-- <div class="form-group" method="POST" action="/game_creation"> -->
+  <form method = "POST" action="/game_creation">
+    Game Type:<br>
+    <select name="gameMode" class="form-control">
+      <option>Assassins - Rapid Fire</option>
+      <option>Assassins - Last Man Standing</option>
+      <option>Secret Santa</option>
+      <option>Coming Soon...</option>
+    </select>
+    <br>
+    Start Date (month/day/year):<br>
+    ex: 07/16/2000<br>
+    <input type="text" name="startDate" required><br><br>
 
-  <title>Search</title>
+    End Date (month/day/year) <br>
+    ex: 07/16/2000: <br>
+    <input type="text" name="endDate" required><br><br>
 
-  <div class="blog-masthead" >
-    <h1>milksquared</h1>
+    Join Key: <br>
+    This is a password that users can use to join your game! <br>
+    <input type="text" name="joinKey" required><br><br>
 
-    <!-- navbar !-->
-    <nav class="nav navbar-toggleable-md nav-lt">
-      <a class="nav-link active" href="/search">Search</a>
-      <a class="nav-link" href="/profile">Profile</a>
-      <a class="nav-link" href="/mkgame">New Game</a>
-      <a class="nav-link" href="/feed">Feed</a>
-      <a class="nav-link" href="/logout">Logout</a>
-    </nav>
-  </div>
+    Title: <br>
+    <input type="text" name="title" required><br><br>
 
-</head>
-<body>
-  <div class="container-1">
-    <!-- <div class="form-group" method="POST" action="/game_creation"> -->
-      <form method = "POST" action="/game_creation">
+    Description: <br>
+    <input type="text" name="description" required><br><br>
 
-      Game Type:<br>
-      <select name="gameMode" class="form-control">
-	<option>Assassins - Rapid Fire</option>
-  <option>Assassins - Last Man Standing</option>
-	<option>Secret Santa</option>
-	<option>Coming Soon...</option>
-      </select>
-      <br>
-      Start Date (month/day/year):<br>
-      ex: 07/16/2000<br>
-      <input type="text" name="startDate" required><br><br>
+    <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">Submit</button>
+  </form>
 
-      End Date (month/day/year) <br>
-      ex: 07/16/2000: <br>
-      <input type="text" name="endDate" required><br><br>
+</div>
+{% endblock %}
 
-      Join Key: <br>
-      This is a password that users can use to join your game! <br>
-      <input type="text" name="joinKey" required><br><br>
-
-      Title: <br>
-      <input type="text" name="title" required><br><br>
-
-      Description: <br>
-      <input type="text" name="description" required><br><br>
-
-      <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">Submit</button>
-    </form>
-
-  </div>
-  <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
-
-</body>
-</html>
+{% block js %}
+<script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+{% endblock %}

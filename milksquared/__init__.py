@@ -20,12 +20,6 @@ def root():
     # return render_template("login.html")
     return render_template('index.html')
 
-@my_app.route('/feed')
-def feed():
-    if "user" not in session:
-        return redirect(url_for('login'))
-    return render_template("feed.html")
-
 # ==================== CREATE ACCOUNT =======================
 @my_app.route('/register', methods=['GET','POST'])
 # Account creation (duh)

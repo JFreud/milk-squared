@@ -25,3 +25,6 @@ first, flash messages now work in login page and profile
 second, the user can now put in certain rules for games, along w customization for different assassins games and secret santa stuff
 third, idk, i just cleaned up some stuff
 
+goldmanJ -- 2018-05-31 12:46:43
+set up a template structure, cleaned up html pages
+

@@ -1,35 +1,14 @@
-<!Doctype html>
-<head>
+{% extends "base.html" %}
 
-  <!-- bootstrap !-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+{% block title %}
+Index
+{% endblock %}
 
-  <!-- custom style for website !-->
-  <link rel="stylesheet" type="text/css" href="../static/stuff.css"/>
 
-  <title>Search</title>
-
-  <div class="blog-masthead" >
-    <h1>milksquared</h1>
-
-    <!-- navbar !-->
-    <nav class="nav navbar-toggleable-md nav-lt">
-      <a class="nav-link active" href="/search">Search</a>
-      <a class="nav-link" href="/profile">Profile</a>
-      <a class="nav-link" href="/mkgame">New Game</a>
-      <a class="nav-link" href="/feed">Feed</a>
-      <a class="nav-link" href="/logout">Logout</a>
-    </nav>
-  </div>
-
-</head>
-<body>
-  <h2>How to Use This Website</h2>
-  <p id="indexContent">
-    Content stuff...
-    <br><br><br>more stuffs, here's some words
-    <br>blah blah blah bleeeeeeeeh
-  </p>
-  <script src="../static/stuff.js"></script>
-</body>
-</html>
+{% block body %}
+<p>
+  This is our current homepage! We should eventually update this to look nice,
+  have a basic description of the site and who we each are, and other minor
+  things. For now, though, we've got nothing.
+</p>
+{% endblock %}
