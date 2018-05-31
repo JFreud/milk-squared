@@ -8,7 +8,7 @@ Profile
 
 {% set messages = get_flashed_messages() %}
 {% for message in messages %}
-  <h3>{{message}}</h3>
+<h3>{{message}}</h3>
 {% endfor %}
 
 <div id="userinfo">
@@ -62,7 +62,7 @@ Profile
 
 {% block js %}
 <script>
-  $('#tabs a').on('click', function (e) {
+  $('#myTab a').on('click', function (e) {
   e.preventDefault()
   $(this).tab('show')
   })
