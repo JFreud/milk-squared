@@ -125,6 +125,13 @@ def crRulesSS(gameID, maxPeople, spending):
     c.execute(cm)
     closeDatabase(db)
 
+def joinGame(gameID, userID):
+    #adds player into a game
+    db, c = openDatabase()
+    cm = 'INSERT INTO players VALUES (%d, %d, 0, , 0);' %(gameID, userID)
+    c.execute(cm)
+    closeDatabase(db)
+
 # END FUNCTIONS
 
 
