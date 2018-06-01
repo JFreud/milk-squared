@@ -167,12 +167,17 @@ def create_rules():
 # Things on it: who's left, leaderboard, game feed
 # Will have link to stats
 
-
 @my_app.route('/game')
 def game():
+
+    '''
     if "user" not in session:
         return redirect(url_for('login'))
-    return render_template("vwgame.html")
+    return render_template("game.html")
+    '''
+
+    # THIS CODE IS FOR TESTING game.html
+    return render_template( "game.html" )
 
 # ==================== SEARCH =======================
 # Search option for games and users
