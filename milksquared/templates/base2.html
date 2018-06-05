@@ -24,29 +24,19 @@
 
   <nav class="navbar navbar-expand-lg sticky-top navbar-light" style="background-color: seashell;">
     <a class="navbar-brand" href="/">milksquared</a>
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" href="/profile">Profile</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/mkgame">New Game</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/fndgame">Join Game</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0" action="/logout">
-      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
+    <form class="form-inline my-2 my-lg-0" action="/login">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login/Register</button>
     </form>
   </nav>
 
 
   <!-- main content -->
+
   {% block body %}{% endblock %}
 
   <!-- javascript -->
   <script src="../static/stuff.js"></script>
-  {% block js %}{% endblock %}
 </body>
 
 </html>

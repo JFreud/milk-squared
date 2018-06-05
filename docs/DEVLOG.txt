@@ -31,3 +31,6 @@ set up a template structure, cleaned up html pages
 tiffanyC -- 2018-06-04 22:40:03
 made findGame work, also made keys randomized, also the navbar is prettier :)
 
+tiffanyC -- 2018-06-04 23:09:45
+did like a home thing and stuff
+

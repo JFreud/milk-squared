@@ -17,9 +17,9 @@ DIR = path.dirname(__file__)
 @my_app.route('/')
 def root():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return render_template('homeno.html')
     # return render_template("login.html")
-    return render_template('index.html')
+    return render_template('home.html')
 
 # ==================== CREATE ACCOUNT =======================
 @my_app.route('/register', methods=['GET','POST'])
@@ -87,7 +87,7 @@ def logout():
     if "user" in session:
         username = session.pop('user')
         flash ("Logged out " + username)
-        return redirect(url_for('login'))
+        return redirect(url_for('root'))
     else:
         return redirect(url_for('root'))
 

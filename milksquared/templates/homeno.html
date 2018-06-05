@@ -1,0 +1,21 @@
+{% extends "base2.html" %}
+
+<!--
+  REQUISITE JINJA VARIABLES:
+    game: should be a dictionary containing information about the game.
+          We can sanatize this later, but for now game should have a
+          key for every database record (with the associated values)
+-->
+
+{% block title %}
+Welcome to milksquared!
+{% endblock %}
+
+
+{% block body %}
+<div><p>
+  This is our current homepage! We should eventually update this to look nice,
+  have a basic description of the site and who we each are, and other minor
+  things. For now, though, we've got nothing.
+</p></div>
+{% endblock %}
