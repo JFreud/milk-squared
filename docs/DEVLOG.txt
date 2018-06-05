@@ -28,3 +28,6 @@ third, idk, i just cleaned up some stuff
 goldmanJ -- 2018-05-31 12:46:43
 set up a template structure, cleaned up html pages
 
+tiffanyC -- 2018-06-04 22:40:03
+made findGame work, also made keys randomized, also the navbar is prettier :)
+

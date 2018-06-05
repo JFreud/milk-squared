@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 
 {% block title %}
-Rules
+Join a game
 {% endblock %}
 
 {% block body %}
-<h2>Search</h2>
-<ul id="searchResults">
-  <li> result#1 </li>
-  <li><a href="#">game result link</a> </li>
-</ul>
+<br><br><div>
+
+  {% set messages = get_flashed_messages() %}
+
+  {% for message in messages %}
+    <h3>{{message}}</h3>
+  {% endfor %}
+
+  </div>
+
+<h2 style="text-align: center;">Join a game here!</h2>
+<form method="POST" action="/checkKey">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="text" name="key" class="form-control" placeholder="Enter key here.">
+    <small id="emailHelp" class="form-text text-muted">The key should be 10 characters long.</small><br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
 {% endblock %}

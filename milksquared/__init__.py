@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from os import path, urandom
 from utils import db
+import random
 import json, urllib2, sys, sqlite3
 
 my_app = Flask(__name__)
@@ -126,7 +127,7 @@ def create_game():
     startDate = request.form['startDate']
     endDate = request.form['endDate']
     adminID = db.getUserID(username)
-    joinKey = request.form['joinKey']
+    joinKey = generateKey()
     title = request.form['title']
     description = request.form['description']
     if gameMode == "Assassins - Rapid Fire":
@@ -139,6 +140,17 @@ def create_game():
     session['game'] = gameID
     session["gameType"] = typ
     return render_template("rules.html", gameType = typ)
+
+def generateKey():
+    alphabet = []
+    for letter in range(65, 91):
+        alphabet.append(chr(letter))
+    for letter in range(97, 123):
+        alphabet.append(chr(letter))
+    key = ""
+    for i in range(0, 10):
+        key += random.choice(alphabet)
+    return key
 
 @my_app.route('/rule_creation', methods=["POST"])
 def create_rules():
@@ -168,28 +180,35 @@ def create_rules():
 # Will have link to stats
 
 @my_app.route('/game')
-def game():
-
-    '''
+def game(): 
     if "user" not in session:
         return redirect(url_for('login'))
-    return render_template("game.html")
-    '''
+    return render_template("game.html", game=game)
 
-    # THIS CODE IS FOR TESTING game.html
-    return render_template( "game.html" )
 
-# ==================== SEARCH =======================
-# Search option for games and users
+# ==================== FINDGAME =======================
+# Adds a user to a game depending on the key inputted
 # The layout of this is unclear
 
-@my_app.route('/search')
-def search():
-    # DO THE SEARCH
-    # DROPDOWN ON SEARCH BAR
+@my_app.route('/fndgame')
+def fndgame():
     if "user" not in session:
         return redirect(url_for('login'))
     return render_template("search.html")
+
+@my_app.route("/checkKey", methods=["POST"])
+def checkkey():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    key = request.form["key"]
+    game = db.checkKey(key)
+    if game == "doesn't exist":
+        flash("The key you entered is invalid. Please try again.")
+        return redirect(url_for("fndgame"))
+    else:
+        db.joinGame(game, db.getUserID(session["user"]))
+        flash("Joined game " + str(game))
+        return redirect(url_for("game", game=game))
 
 # ==================== PROFILE =======================
 # User Profile with info and stats and stuff

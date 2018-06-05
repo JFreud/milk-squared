@@ -125,10 +125,19 @@ def crRulesSS(gameID, maxPeople, spending):
     c.execute(cm)
     closeDatabase(db)
 
+def checkKey(key):
+    db, c = openDatabase()
+    cm = 'SELECT gameID FROM games WHERE key == "%s";' %key
+    game = "doesn't exist"
+    for i in c.execute(cm):
+        game = i[0]
+    closeDatabase(db)
+    return game
+
 def joinGame(gameID, userID):
     #adds player into a game
     db, c = openDatabase()
-    cm = 'INSERT INTO players VALUES (%d, %d, 0, , 0);' %(gameID, userID)
+    cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0);' %(gameID, userID)
     c.execute(cm)
     closeDatabase(db)
 
@@ -220,5 +229,5 @@ def getPlaying(userID):
     closeDatabase(db)
     return listy
 
-#createDatabase()
+createDatabase()
 #register("la","la234","lala")
