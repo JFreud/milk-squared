@@ -207,7 +207,7 @@ def getGames(userID):
 
 def getTitle(gameID):
     db, c = openDatabase()
-    cm = 'SELECT * FROM games WHERE gameID == %d;' %userID
+    cm = 'SELECT * FROM games WHERE gameID == %d;' %gameID
     for i in c.execute(cm):
         closeDatabase(db)
         return i[6]
