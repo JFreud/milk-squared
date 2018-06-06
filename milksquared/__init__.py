@@ -16,10 +16,10 @@ DIR = path.dirname(__file__)
 
 @my_app.route('/')
 def root():
-    if "user" not in session:
-        return render_template('homeno.html')
+    log_status = 'user' in session
     # return render_template("login.html")
-    return render_template('home.html')
+    return render_template('home.html', loggedin=log_status )
+
 
 # ==================== CREATE ACCOUNT =======================
 @my_app.route('/register', methods=['GET','POST'])
@@ -27,7 +27,7 @@ def root():
 def register():
     # do db stuff and make account
     #if request.method == "GET":
-    return render_template('register.html')
+    return render_template('register.html', loggedin=False)
     '''else:
         user = request.form['username']
         passw = request.form['password']
@@ -68,7 +68,7 @@ def login():
     if "user" in session:
         return redirect(url_for('root'))
     if request.method == "GET":
-        return render_template('login.html')
+        return render_template('login.html', loggedin=False)
     else:
         user = request.form['username']
         passw = request.form['password']
@@ -114,7 +114,7 @@ def mkgame():
    #     db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
    #     return redirect(url_for('profile'))
    else:
-       return render_template("mkgame.html")
+       return render_template("mkgame.html", loggedin=True)
 
 
 #This one actually makes it
@@ -139,7 +139,7 @@ def create_game():
     gameID = db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
     session['game'] = gameID
     session["gameType"] = typ
-    return render_template("rules.html", gameType = typ)
+    return render_template("rules.html", gameType = typ, loggedin=True)
 
 def generateKey():
     alphabet = []
@@ -180,10 +180,10 @@ def create_rules():
 # Will have link to stats
 
 @my_app.route('/game')
-def game(): 
+def game():
     if "user" not in session:
         return redirect(url_for('login'))
-    return render_template("game.html", game=game)
+    return render_template("game.html", game=game, loggedin=True)
 
 
 # ==================== FINDGAME =======================
@@ -194,7 +194,7 @@ def game():
 def fndgame():
     if "user" not in session:
         return redirect(url_for('login'))
-    return render_template("search.html")
+    return render_template("search.html", loggedin=True)
 
 @my_app.route("/checkKey", methods=["POST"])
 def checkkey():
@@ -222,7 +222,7 @@ def profile():
     name = db.getName(username)
     games = db.getGames(userID)
     playing = db.getPlaying(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, loggedin=True)
 
 
 
