@@ -13,9 +13,32 @@
 
 
 {% block body %}
-<p>
-  This is our current homepage! We should eventually update this to look nice,
-  have a basic description of the site and who we each are, and other minor
-  things. For now, though, we've got nothing.
-</p>
+<div class="container">
+  <div class="row">
+
+    <!-- The first half of the screen: title + info -->
+    <div class="col-7">
+      <div class="row">
+        <h1>{{ game[title] }}</h1>
+      </div>
+      <div class="row">
+        <h2>{{ game[owner] }}</h2>
+      </div>
+      <div class="row">
+        <h3>{{ game[desc] }}</h3>
+      </div>
+      <div class="row">
+        <p>
+          We should put something here.
+        </p>
+      </div>
+    </div>
+
+    <!-- The second half of the screen: tabs -->
+    <div class="col-5">
+
+    </div>
+    
+  </div>
+</div>
 {% endblock %}

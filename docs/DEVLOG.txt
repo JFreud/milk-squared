@@ -34,3 +34,6 @@ made findGame work, also made keys randomized, also the navbar is prettier :)
 tiffanyC -- 2018-06-04 23:09:45
 did like a home thing and stuff
 
+goldmanJ -- 2018-06-06 14:05:38
+began work on game.html
+
