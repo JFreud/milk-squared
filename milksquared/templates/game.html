@@ -8,7 +8,7 @@
 -->
 
 {% block title %}
-{{ game }}
+{{ game['title'] }}
 {% endblock %}
 
 
@@ -19,13 +19,13 @@
     <!-- The first half of the screen: title + info -->
     <div class="col-7">
       <div class="row">
-        <h1>{{ game[title] }}</h1>
+        <h1>{{ game['title'] }}</h1>
       </div>
       <div class="row">
-        <h2>{{ game[owner] }}</h2>
+        <h2>{{ game['owner'] }}</h2>
       </div>
       <div class="row">
-        <h3>{{ game[desc] }}</h3>
+        <h3>{{ game['desc'] }}</h3>
       </div>
       <div class="row">
         <p>
@@ -37,8 +37,56 @@
     <!-- The second half of the screen: tabs -->
     <div class="col-5">
 
+      <!-- where the content in the tabs is declared -->
+      <ul class="nav nav-tabs" role="tablist" id="tabs">
+        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">first</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">second</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">third</a></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <div id="stats" class="tab-pane fade in active">
+          <h3>heading</h3>
+          <p>
+            some content
+          </p>
+        </div>
+
+        <div id="play" class="tab-pane fade">
+          <h3>heading</h3>
+          <p>
+            some different content
+          </p>
+        </div>
+
+        <div id="admin" class="tab-pane fade">
+          <h3>heading</h3>
+          <p>
+            some even more different content
+          </p>
+        </div>
+
+      </div>
+
     </div>
-    
+
   </div>
 </div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+  $('#myTab a').on('click', function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+  })
+
+  $('#tabs a[href="#stats"]').tab('show')
+  $('#tabs a[href="#play"]').tab('show')
+  $('#tabs li:first-child a').tab('show')
+  $('#tabs li:last-child a').tab('show')
+  $('#tabs li:nth-child(3) a').tab('show')
+</script>
 {% endblock %}

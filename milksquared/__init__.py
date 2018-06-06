@@ -183,6 +183,12 @@ def create_rules():
 def game():
     if "user" not in session:
         return redirect(url_for('login'))
+
+    # for testing
+    game = dict()
+    game['title'] = 'my game'
+    game['owner'] = 'me'
+    game['desc'] = 'this is my game'
     return render_template("game.html", game=game, loggedin=True)
 
 
