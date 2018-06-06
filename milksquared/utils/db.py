@@ -18,9 +18,7 @@ def createDatabase():
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT);"
     c.execute(cm)
-    cm = "CREATE TABLE IF NOT EXISTS rulesA (gameID INTEGER, type INTEGER, maxPeople INTEGER, safeZones TEXT);"
-    c.execute(cm)
-    cm = "CREATE TABLE IF NOT EXISTS rulesSS (gameID INTEGER, maxPeople INTEGER, spendingLimit INTEGER);"
+    cm = "CREATE TABLE IF NOT EXISTS rules (gameID INTEGER, type INTEGER, maxPeople INTEGER, safeZones TEXT);"
     c.execute(cm)
     closeDatabase(db)
 
@@ -113,15 +111,9 @@ def deleteGame(gameID):
     c.execute(cm)
     closeDatabase(db)
 
-def crRulesA(gameID, typ, maxPeople, safeZones):
+def crRules(gameID, typ, maxPeople, safeZones):
     db, c = openDatabase()
-    cm = 'INSERT INTO rulesA VALUES (%d, %d, %d, "%s");' %(gameID, typ, maxPeople, safeZones)
-    c.execute(cm)
-    closeDatabase(db)
-
-def crRulesSS(gameID, maxPeople, spending):
-    db, c = openDatabase()
-    cm = 'INSERT INTO rulesSS VALUES (%d, %d, %d);' %(gameID, maxPeople, spending)
+    cm = 'INSERT INTO rules VALUES (%d, %d, %d, "%s");' %(gameID, typ, maxPeople, safeZones)
     c.execute(cm)
     closeDatabase(db)
 
@@ -215,7 +207,7 @@ def getGames(userID):
 
 def getTitle(gameID):
     db, c = openDatabase()
-    cm = 'SELECT * FROM games WHERE gameID == %d;' %userID
+    cm = 'SELECT * FROM games WHERE gameID == %d;' %gameID
     for i in c.execute(cm):
         closeDatabase(db)
         return i[6]
