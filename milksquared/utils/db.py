@@ -4,7 +4,7 @@ import os
 # DATABSE CREATION/EDITING
 def createDatabase():
     db, c = openDatabase()
-    cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT, extension TEXT DEFAULT 'jpg');"
+    cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT, extension TEXT);"
     #for i in userStatList():
         #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
@@ -66,7 +66,7 @@ def register(username, password, name):
     cm = "SELECT COUNT(*) FROM users;"
     for i in c.execute(cm):
         userID = i[0]
-    c.execute("INSERT INTO users VALUES(?,?,?,?)",[userID, username, password, name])
+    c.execute("INSERT INTO users VALUES(?,?,?,?,?)",[userID, username, password, name,'jpg'])
     closeDatabase(db)
 
 def verify(username, password):
@@ -157,7 +157,7 @@ def getExtension(userID):
 
 def setExtension(userID, extension):
     db, c = openDatabase()
-    cm = 'UPDATE users SET extension = %s WHERE userID == %d;' % (extension, userID)
+    cm = 'UPDATE users SET extension = "%s" WHERE userID == %d;' % (extension, userID)
     c.execute(cm)
     closeDatabase(db)
 
@@ -289,6 +289,6 @@ def confirmKill(userID, gameID):
     c.execute(cm)
     closeDatabse()
 
-
-#createDatabase()
-#register("la","la234","lala")
+if __name__ == "__main__":
+    createDatabase()
+    #register("la","la234","lala")

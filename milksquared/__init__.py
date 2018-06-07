@@ -264,13 +264,15 @@ def upload():
     print(file)
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        newname = str(db.getUserID(session["user"]))
+        userID = db.getUserID(session["user"])
+        newname = str(userID)
         file.save(path.join(my_app.config['UPLOAD_FOLDER'], filename))
         extension = filename.split(".")
         extension = str(extension[1])
         source = PFP_FOLDER + "/" + filename
         destination = PFP_FOLDER + "/" + newname + "." + extension
         rename(source,destination)
+        db.setExtension(userID, extension)
         flash("Profile Picture Updated")
         return redirect(url_for('profile'))
     else:
