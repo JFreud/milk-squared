@@ -43,3 +43,6 @@ did more work on game.html
 tiffanyC -- 2018-06-07 00:01:16
 cleaned up some code and worked on a nice template for game.html
 
+tiffanyC -- 2018-06-07 00:41:44
+modified profile.html so that it had same format as game.html, among other small things
+

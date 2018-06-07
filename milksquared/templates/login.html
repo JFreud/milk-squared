@@ -6,12 +6,6 @@ Login
 
 {% block body %}
 
-  {% set messages = get_flashed_messages() %}
-
-  {% for message in messages %}
-    <h3>{{message}}</h3>
-  {% endfor %}
-
   <div class="container-1">
     <form class="signin" method="POST" action="/login" value="">
 

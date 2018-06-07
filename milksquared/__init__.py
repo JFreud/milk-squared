@@ -100,7 +100,7 @@ def logout():
 @my_app.route('/mkgame')
 def mkgame():
    if "user" not in session:
-       return redirect(url_for('login'))
+       return redirect(url_for('root'))
    # elif request.method == "POST":
    #     username = session['user']
    #     gameMode = request.form['gameMode']
@@ -120,7 +120,7 @@ def mkgame():
 @my_app.route('/game_creation', methods=["POST"])
 def create_game():
     if "user" not in session:
-       return redirect(url_for('login'))
+       return redirect(url_for('root'))
     username = session['user']
     gameMode = request.form['gameMode']
     startDate = request.form['startDate']
@@ -152,7 +152,7 @@ def generateKey():
 @my_app.route('/rule_creation', methods=["POST"])
 def create_rules():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('root'))
     if "game" not in session or "gameType" not in session:
         flash("Please try making your game again.")
         return redirect(url_for("profile"))
@@ -175,7 +175,7 @@ def create_rules():
 def game(idd):
     idd = int(idd)
     if "user" not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('root'))
     gamee = db.getGameInfo(idd)
     gamee["adminname"] = session["user"]
     managing = idd in db.getGamesID(db.getUserID(session["user"]))
@@ -191,13 +191,13 @@ def game(idd):
 @my_app.route('/fndgame')
 def fndgame():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('root'))
     return render_template("search.html", loggedin=True)
 
 @my_app.route("/checkKey", methods=["POST"])
 def checkkey():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('root'))
     key = request.form["key"]
     game = db.checkKey(key)
     if game == "doesn't exist":
@@ -215,16 +215,28 @@ def checkkey():
 @my_app.route('/profile')
 def profile():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('root'))
     username = session['user']
     userID = db.getUserID(username)
     name = db.getName(username)
     games = db.getGames(userID)
     playing, p = db.getPlaying(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, loggedin=True)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, is_own=True, loggedin=True)
 
-
-
+@my_app.route('/profile/<idd>')
+def profileWithID(idd):
+    if "user" not in session:
+        return redirect(url_for("root"))
+    idd = int(idd)
+    person = idd == db.getUserID(session["user"])
+    if person:
+        return redirect(url_for("profile"))
+    username = session['user']
+    userID = db.getUserID(username)
+    name = db.getName(username)
+    games = db.getGames(userID)
+    playing, p = db.getPlaying(userID)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, is_own=False, loggedin=True)
 
 if __name__ == "__main__":
     my_app.debug = True #DANGER DANGER! Set to FALSE before deployment!

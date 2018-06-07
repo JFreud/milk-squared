@@ -1,64 +1,93 @@
 {% extends "base.html" %}
 
 {% block title %}
-Profile
+{{name}}
 {% endblock %}
 
 {% block body %}
 
-{% set messages = get_flashed_messages() %}
-{% for message in messages %}
-<h3>{{message}}</h3>
-{% endfor %}
+<div class="container">
+  <div class="row">
 
-<div id="userinfo">
-  <h2>Profile</h2>
-  Name: {{name}} <br>
-  Username: {{username}} <br>
-  UserID: {{userID}} <br>
-</div>
-
-<div class="tabby-container">
-  <ul class="nav nav-tabs" role="tablist" id="tabs">
-    <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">stats</a></li>
-    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">Play</a></li>
-    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">Admin</a></li>
-  </ul>
-
-  <div class="tab-content">
-
-    <div id="stats" class="tab-pane fade in active">
-      <h3>Stats</h3>
-      <svg id="chart"></svg>
-      <ul>Games You've Played:
-        {% for game in games %}
-        <li>{{game}}</li>
-        {% endfor %}
-      </ul>
+    <!-- The first half of the screen: title + info -->
+    <div class="col-5">
+      <div class="row">
+        <h1>{{ name }}</h1>
+      </div>
+      <div class="row">
+        <h2>Username: {{username}}</h2>
+      </div>
+      <div class="row">
+        <h2>I want to put the uploaded picture here.</h2>
+      </div>
     </div>
 
-    <div id="play" class="tab-pane fade">
-      <h3>Games You're Playing</h3>
-      <ul id="playing">
-        {% for game in playing %}
-        <li> {{game}} </li>
-        {% endfor %}
-      </ul>
-    </div>
+    <!-- The second half of the screen: tabs -->
+    <div class="col-7">
 
-    <div id="admin" class="tab-pane fade">
-      <h3>Games You're Managing</h3>
-      <ul id="managing">
-        {% for game in games %}
-        <li> {{game}} </li>
-        {% endfor %}
+      <!-- where the content in the tabs is declared -->
+      <ul class="nav nav-tabs" role="tablist" id="tabs">
+        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#playing">Games Playing</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#managing">Games Managing</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#past">Past Games</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#stats">Stats</a></li>
+        {% if is_own %}
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#user">Account</a></li>
+        {% endif %}
       </ul>
+
+      <div class="tab-content">
+
+        <div id="playing" class="tab-pane fade show active">
+          <h3>Games Playing</h3>
+          <ul>
+            {% for game in playing %}
+            <li> {{game}} </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div id="managing" class="tab-pane fade">
+          <h3>Games Managing</h3>
+          <ul>
+            {% for game in games %}
+            <li>{{game}}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div id="past" class="tab-pane fade">
+          <h3>Past Games</h3>
+          <p>
+            I don't actually think we have anything for past games yet but 
+            this could be kind of cool.
+          </p>
+        </div>
+
+        <div id="stats" class="tab-pane fade">
+          <h3>Stats</h3>
+          <p>
+            stat stuff we'll do later
+          </p>
+        </div>
+
+        {% if is_own %}
+        <div id="user" class="tab-pane fade">
+          <h3>Player Things</h3>
+          <p>
+            account stuff user can do
+          </p>
+        </div>
+        {% endif %}
+
+      </div>
+
     </div>
 
   </div>
-
 </div>
 {% endblock %}
+
 
 {% block js %}
 <script>
@@ -67,10 +96,11 @@ Profile
   $(this).tab('show')
   })
 
+  $('#tabs a[href="#managing"]').tab('show')
+  $('#tabs a[href="#past"]').tab('show')
   $('#tabs a[href="#stats"]').tab('show')
-  $('#tabs a[href="#play"]').tab('show')
-  $('#tabs li:first-child a').tab('show')
-  $('#tabs li:last-child a').tab('show')
-  $('#tabs li:nth-child(3) a').tab('show')
+  $('#tabs a[href="#user"]').tab('show')
+  $('#tabs a[href="#playing"]').tab('show')
+
 </script>
 {% endblock %}
