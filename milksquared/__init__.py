@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, session, redirect, url_for, flash
-from os import path, urandom
+from flask import Flask, render_template, request, session, redirect, url_for, flash, send_from_directory
+from werkzeug.utils import secure_filename
+from os import path, urandom, mkdir
 from utils import db
 import random
 import json, urllib2, sys, sqlite3
@@ -9,6 +10,20 @@ my_app.secret_key = 'i dont have a secret key'
 
 DIR = path.dirname(__file__)
 #console output will appear in /var/log/apache2/error.log
+
+#file uploading and such
+PFP_FOLDER = path.abspath(path.join(path.dirname(__file__), "data/pfps"))
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+if not path.isdir(PFP_FOLDER):
+    mkdir(PFP_FOLDER)
+
+my_app.config['UPLOAD_FOLDER'] = PFP_FOLDER
+my_app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 
 # ==================== HOME =======================
 # If logged in displays home/feed
@@ -237,6 +252,26 @@ def profileWithID(idd):
     games = db.getGames(userID)
     playing, p = db.getPlaying(userID)
     return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, is_own=False, loggedin=True)
+
+@my_app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(url_for(profile))
+    file = request.files['file']
+    print(file)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(path.join(my_app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('uploaded_file', filename=filename))
+        # return redirect(url_for('profile'), message = "success")
+    else:
+        return redirect(url_for('profile'), message = "file incompatible")
+
+@my_app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(my_app.config['UPLOAD_FOLDER'], filename)
+
 
 if __name__ == "__main__":
     my_app.debug = True #DANGER DANGER! Set to FALSE before deployment!

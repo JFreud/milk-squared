@@ -19,6 +19,10 @@
       </div>
       <div class="row">
         <h2>I want to put the uploaded picture here.</h2>
+        <form action = "/upload" method = "POST" enctype = "multipart/form-data">
+        <input id = "upload" type = "file" name = "file" class="btn">
+        <input id = "submit" type = "submit" class = "btn btn-success">
+      </form>
       </div>
     </div>
 
@@ -59,7 +63,7 @@
         <div id="past" class="tab-pane fade">
           <h3>Past Games</h3>
           <p>
-            I don't actually think we have anything for past games yet but 
+            I don't actually think we have anything for past games yet but
             this could be kind of cool.
           </p>
         </div>
