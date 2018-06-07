@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
-from os import path, urandom, mkdir
+from os import path, urandom, mkdir, rename
 from utils import db
 import random
 import json, urllib2, sys, sqlite3
@@ -12,7 +12,7 @@ DIR = path.dirname(__file__)
 #console output will appear in /var/log/apache2/error.log
 
 #file uploading and such
-PFP_FOLDER = path.abspath(path.join(path.dirname(__file__), "data/pfps"))
+PFP_FOLDER = path.abspath(path.join(path.dirname(__file__), "static/pfps"))
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 if not path.isdir(PFP_FOLDER):
@@ -262,11 +262,19 @@ def upload():
     print(file)
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
+        newname = str(db.getUserID(session["user"]))
         file.save(path.join(my_app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('uploaded_file', filename=filename))
-        # return redirect(url_for('profile'), message = "success")
+        extension = filename.split(".")
+        extension = str(extension[1])
+        source = PFP_FOLDER + "/" + filename
+        destination = PFP_FOLDER + "/" + newname + "." + extension
+        rename(source,destination)
+        flash("Profile Picture Updated")
+        return redirect(url_for('profile'))
     else:
-        return redirect(url_for('profile'), message = "file incompatible")
+        flash("file incompatible")
+        return redirect(url_for('profile'))
+
 
 @my_app.route('/uploads/<filename>')
 def uploaded_file(filename):
