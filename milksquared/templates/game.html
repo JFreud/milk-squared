@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 
 <!--
-  REQUISITE JINJA VARIABLES:
-    game: should be a dictionary containing information about the game.
-          We can sanatize this later, but for now game should have a
-          key for every database record (with the associated values)
+game is a dictionary!
+game keys:
+- gameID
+- managerID
+- key
+- type
+- dateStart
+- dateEnd
+- title
+- description
+- adminname
 -->
 
 {% block title %}
@@ -17,55 +24,91 @@
   <div class="row">
 
     <!-- The first half of the screen: title + info -->
-    <div class="col-7">
+    <div class="col-5">
       <div class="row">
         <h1>{{ game['title'] }}</h1>
       </div>
+      {% if admin %}
       <div class="row">
-        <h2>{{ game['owner'] }}</h2>
+        <h2>Key: {{ game['key'] }}</h2>
+      </div>
+      {% else %}
+      <div class="row">
+      	<h2>Manager: {{game['adminname']}}</h2>
+      </div>
+      {% endif %}
+      <div class="row">
+        <h3>{{ game['description'] }}</h3>
       </div>
       <div class="row">
-        <h3>{{ game['desc'] }}</h3>
-      </div>
-      <div class="row">
-        <p>
-          We should put something here.
-        </p>
+        <h3>Dates: {{game['dateStart']}} to {{game['dateEnd']}}</h3>
       </div>
     </div>
 
     <!-- The second half of the screen: tabs -->
-    <div class="col-5">
+    <div class="col-7">
 
       <!-- where the content in the tabs is declared -->
       <ul class="nav nav-tabs" role="tablist" id="tabs">
-        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#stats">first</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">second</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">third</a></li>
+        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#feed">Feed</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#rules">Rules</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#players">Players</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#stats">Stats</a></li>
+        {% if playing %}
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#play">Player Things</a></li>
+        {% endif %}
+        {% if admin %}
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admin">Admin Things</a></li>
+        {% endif %}
       </ul>
 
       <div class="tab-content">
 
-        <div id="stats" class="tab-pane fade in active">
-          <h3>heading</h3>
+        <div id="feed" class="tab-pane fade show active">
+          <h3>Feed</h3>
+          <p>
+            content
+          </p>
+        </div>
+
+        <div id="rules" class="tab-pane fade">
+          <h3>Rules</h3>
           <p>
             some content
           </p>
         </div>
 
-        <div id="play" class="tab-pane fade">
-          <h3>heading</h3>
+        <div id="players" class="tab-pane fade">
+          <h3>Players</h3>
           <p>
             some different content
           </p>
         </div>
 
-        <div id="admin" class="tab-pane fade">
-          <h3>heading</h3>
+        <div id="stats" class="tab-pane fade">
+          <h3>Stats</h3>
+          <p>
+            some more different content
+          </p>
+        </div>
+
+        {% if playing %}
+		<div id="play" class="tab-pane fade">
+          <h3>Player Things</h3>
           <p>
             some even more different content
           </p>
         </div>
+        {% endif %}
+
+        {% if admin %}
+        <div id="admin" class="tab-pane fade">
+          <h3>Administrative Things</h3>
+          <p>
+            some extravagantly different content
+          </p>
+        </div>
+        {% endif %}
 
       </div>
 
@@ -83,10 +126,12 @@
   $(this).tab('show')
   })
 
+  $('#tabs a[href="#rules"]').tab('show')
+  $('#tabs a[href="#players"]').tab('show')
   $('#tabs a[href="#stats"]').tab('show')
   $('#tabs a[href="#play"]').tab('show')
-  $('#tabs li:first-child a').tab('show')
-  $('#tabs li:last-child a').tab('show')
-  $('#tabs li:nth-child(3) a').tab('show')
+  $('#tabs a[href="#admin"]').tab('show')
+  $('#tabs a[href="#feed"]').tab('show')
+
 </script>
 {% endblock %}

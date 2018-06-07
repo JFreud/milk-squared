@@ -86,7 +86,6 @@ def login():
 def logout():
     if "user" in session:
         username = session.pop('user')
-        flash ("Logged out " + username)
         return redirect(url_for('root'))
     else:
         return redirect(url_for('root'))
@@ -134,8 +133,6 @@ def create_game():
         typ = 0
     elif gameMode == "Assassins - Last Man Standing":
         typ = 1
-    elif gameMode == "Secret Santa":
-        typ = 2
     gameID = db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
     session['game'] = gameID
     session["gameType"] = typ
@@ -157,19 +154,14 @@ def create_rules():
     if "user" not in session:
         return redirect(url_for('login'))
     if "game" not in session or "gameType" not in session:
-        flash("Please try again.")
+        flash("Please try making your game again.")
         return redirect(url_for("profile"))
     if "maxPeople" in request.form:
         gameMode = session['gameType']
         gameID = session["game"]
-        if gameMode == 0 or gameMode == 1:
-            maxPeople = int(request.form['maxPeople'])
-            safeZones = request.form['safeZones']
-            db.crRulesA(session["game"], gameMode, maxPeople, safeZones)
-        elif gameMode == 2:
-            maxPeople = int(request.form['maxPeople'])
-            spending = int(request.form['spending'])
-            db.crRulesSS(session["game"], maxPeople, spending)
+        maxPeople = int(request.form['maxPeople'])
+        safeZones = request.form['safeZones']
+        db.crRules(session["game"], gameMode, maxPeople, safeZones)
     else:
         db.deleteGame(session["game"])
     return redirect(url_for('profile'))
@@ -179,17 +171,17 @@ def create_rules():
 # Things on it: who's left, leaderboard, game feed
 # Will have link to stats
 
-@my_app.route('/game')
-def game():
+@my_app.route('/game/<idd>')
+def game(idd):
+    idd = int(idd)
     if "user" not in session:
         return redirect(url_for('login'))
-
-    # for testing
-    game = dict()
-    game['title'] = 'my game'
-    game['owner'] = 'me'
-    game['desc'] = 'this is my game'
-    return render_template("game.html", game=game, loggedin=True)
+    gamee = db.getGameInfo(idd)
+    gamee["adminname"] = session["user"]
+    managing = idd in db.getGamesID(db.getUserID(session["user"]))
+    p, playing = db.getPlaying(db.getUserID(session["user"]))
+    play = idd in playing
+    return render_template("game.html", game=gamee, admin=managing, playing=play, loggedin=True)
 
 
 # ==================== FINDGAME =======================
@@ -214,7 +206,8 @@ def checkkey():
     else:
         db.joinGame(game, db.getUserID(session["user"]))
         flash("Joined game " + str(game))
-        return redirect(url_for("game", game=game))
+        print game
+        return redirect(url_for("game", idd=game))
 
 # ==================== PROFILE =======================
 # User Profile with info and stats and stuff
@@ -227,7 +220,7 @@ def profile():
     userID = db.getUserID(username)
     name = db.getName(username)
     games = db.getGames(userID)
-    playing = db.getPlaying(userID)
+    playing, p = db.getPlaying(userID)
     return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, loggedin=True)
 
 

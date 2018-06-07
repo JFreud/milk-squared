@@ -40,3 +40,6 @@ began work on game.html
 goldmanJ -- 2018-06-06 15:31:55
 did more work on game.html
 
+tiffanyC -- 2018-06-07 00:01:16
+cleaned up some code and worked on a nice template for game.html
+

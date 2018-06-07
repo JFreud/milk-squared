@@ -205,6 +205,15 @@ def getGames(userID):
     closeDatabase(db)
     return listy
 
+def getGamesID(userID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM games WHERE managerID == %d;' %userID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[0])
+    closeDatabase(db)
+    return listy
+
 def getTitle(gameID):
     db, c = openDatabase()
     cm = 'SELECT * FROM games WHERE gameID == %d;' %gameID
@@ -215,11 +224,24 @@ def getTitle(gameID):
 def getPlaying(userID):
     db, c = openDatabase()
     cm = 'SELECT * FROM players WHERE userID == %d;' %userID
-    listy = []
+    listy1 = []
+    listy2 = []
     for i in c.execute(cm):
-        listy.append(getTitle(i[0]))
+        listy1.append(getTitle(i[0]))
+        listy2.append(i[0])
     closeDatabase(db)
-    return listy
+    return listy1, listy2
 
-createDatabase()
+def getGameInfo(gameID):
+    db, c = openDatabase()
+    cm = 'SELECT * FROM games WHERE gameID == %d;' %gameID
+    returned = {}
+    stuff = ["gameID", "managerID", "key", "type", "dateStart", "dateEnd", "title", "description"]
+    x = list(c.execute(cm))[0]
+    for i in range(0, len(x)):
+        returned[stuff[i]] = x[i]
+    closeDatabase(db)
+    return returned
+
+#createDatabase()
 #register("la","la234","lala")
