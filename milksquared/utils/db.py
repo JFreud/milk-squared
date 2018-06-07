@@ -4,7 +4,7 @@ import os
 # DATABSE CREATION/EDITING
 def createDatabase():
     db, c = openDatabase()
-    cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT);"
+    cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT, extension TEXT DEFAULT 'jpg');"
     #for i in userStatList():
         #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
@@ -146,6 +146,20 @@ def getUserID(username):
         x = i[0]
     closeDatabase(db)
     return x
+
+def getExtension(userID):
+    db, c = openDatabase()
+    cm = 'SELECT extension FROM users WHERE userID == %d;' % userID
+    for i in c.execute(cm):
+        x = i[0]
+    closeDatabase(db)
+    return x
+
+def setExtension(userID, extension):
+    db, c = openDatabase()
+    cm = 'UPDATE users SET extension = %s WHERE userID == %d;' % (extension, userID)
+    c.execute(cm)
+    closeDatabase(db)
 
 def getName(username):
     db, c = openDatabase()

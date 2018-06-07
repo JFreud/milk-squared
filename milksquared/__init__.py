@@ -236,7 +236,8 @@ def profile():
     name = db.getName(username)
     games = db.getGames(userID)
     playing, p = db.getPlaying(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, is_own=True, loggedin=True)
+    extension = db.getExtension(userID)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):
@@ -251,7 +252,8 @@ def profileWithID(idd):
     name = db.getName(username)
     games = db.getGames(userID)
     playing, p = db.getPlaying(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, is_own=False, loggedin=True)
+    extension = db.getExtension(userID)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, extension=extension, is_own=False, loggedin=True)
 
 @my_app.route('/upload', methods=['GET', 'POST'])
 def upload():
