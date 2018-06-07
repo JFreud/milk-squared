@@ -279,7 +279,7 @@ def killTarget(userID, targetID, gameID, time, date):
             cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
             c.execute(cm)
             #kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT)
-            cm = 'INSERT INTO kills VALUES(%d, %d, %d, %d, %s, %s);' % (gameID, targetID, userID, 0, date, time)
+            cm = 'INSERT INTO kills VALUES(%d, %d, %d, %d, "%s", "%s");' % (gameID, targetID, userID, 0, date, time)
             c.execute(cm)
     closeDatabase(db)
 
