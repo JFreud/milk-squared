@@ -9,17 +9,19 @@ Login
   <div class="container-1">
     <form class="signin" method="POST" action="/login" value="">
 
+      <h2 class="form-signin-heading" style="text-align: center;">Login</h2><br>
+
       Username:<br>
-      <input type="text" name="username" value="" required><br><br>
+      <input type="text" name="username" value="" class="form-control" required><br>
 
       Password: <br>
-      <input type="password" name="password" value="" required><br><br>
-      <input type="submit" value="submit" class = "button2"> <br> <br>
+      <input type="password" name="password" value="" class="form-control" required><br>
+      <button class="btn btn-sml btn-primary btn-block" type="submit" name="submitType" value="Submit">Submit</button> <br>
     </form>
 
     <form method="GET" action="/register">
       Don't have an account?
-      <input type="submit" value="Register" class="button1" formAction="/register"></button>
+      <button class="btn btn-sml btn-primary btn-block" type="submit" name="submitType" value="Submit">Register here!</button>
     </form>
 
   </div>

@@ -5,13 +5,16 @@ Join a game
 {% endblock %}
 
 {% block body %}
+
+<div class="container-1">
 <h2 style="text-align: center;">Join a game here!</h2>
 <form method="POST" action="/checkKey">
   <div class="form-group">
-    <label for="exampleInputEmail1">Key</label>
+    <label for="exampleInputEmail1">Key:</label>
     <input type="text" name="key" class="form-control" placeholder="Enter key here.">
     <small id="emailHelp" class="form-text text-muted">The key should be 10 characters long.</small><br>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-sml btn-primary btn-block">Submit</button>
   </div>
 </form>
+</div>
 {% endblock %}

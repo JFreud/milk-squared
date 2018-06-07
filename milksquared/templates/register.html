@@ -40,38 +40,20 @@ Register
 <div class="container-1">
   {% set messages = get_flashed_messages() %}
   <form method = "POST" action="/user_creation" class="form-signin">
-    <h2 class="form-signin-heading"> Register. </h2>
-    <label for="inputEmail" class="sr-only">Full name</label>
-    <input type="name" id="inputEmail" name="name" class="form-control is-valid" placeholder="Full name" required autofocus>
+    <h2 class="form-signin-heading" style="text-align: center;"> Register </h2><br>
+    <label for="inputEmail">Full name:</label>
+    <input type="name" id="inputEmail" name="name" class="form-control is-valid" placeholder="Full name" required autofocus><br>
 
-    {% if messages[0] == "Username already exists." %}
-    <label for="inputEmail" class="sr-only is-invalid">Username</label>
-    <input type="user" id="inputEmail" name="username" class="form-control is-invalid" placeholder="Username" required autofocus>
-    <h3 id="passwordHelp" class="text-danger">
-      Username already exists.
-    </h3>
+    <label for="inputEmail">Username:</label>
+    <input type="user" id="inputEmail" name="username" class="form-control is-valid" placeholder="Username" required autofocus><br>
 
-    {% else %}
-    <label for="inputEmail" class="sr-only">Username</label>
-    <input type="user" id="inputEmail" name="username" class="form-control is-valid" placeholder="Username" required autofocus>
-    {% endif %}
+    <label for="inputPassword">Password:</label>
+    <input type="password" id="inputPassword" name = "password" class="form-control" placeholder="Password" required><br>
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" name = "password" class="form-control" placeholder="Password" required>
+    <label for="inputPassword">Confirm password:</label>
+    <input type="password" id="inputPasswordconfirm" name = "confirm" class="form-control" placeholder="Retype password" required><br>
 
-    {% if messages[0] == "Passwords do not match." %}
-    <label for="inputPassword" class="sr-only">Confirm Password</label>
-    <input type="password" id="inputPasswordconfirm" name = "confirm" class="form-control is-invalid" placeholder="Re-type password" required>
-    <h3 id="passwordHelp" class="text-danger">
-      Passwords must match.
-    </h3>
-
-    {% else %}
-    <label for="inputPassword" class="sr-only">Confirm Password</label>
-    <input type="password" id="inputPasswordconfirm" name = "confirm" class="form-control" placeholder="re-type password" required>
-    {% endif %}
-
-    <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Register">Register</button>
+    <button class="btn btn-sml btn-primary btn-block" type="submit" name="submitType" value="Register">Register</button>
   </form>
 </div>
 {% endblock %}

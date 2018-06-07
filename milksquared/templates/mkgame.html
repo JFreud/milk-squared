@@ -6,6 +6,7 @@ Make Game
 
 {% block body %}
 <div class="container-1">
+<h2 style="text-align: center;">Create a game here!</h2>
   <!-- <div class="form-group" method="POST" action="/game_creation"> -->
   <form method = "POST" action="/game_creation">
     Game Type:<br>
@@ -16,19 +17,19 @@ Make Game
     <br>
     Start Date (month/day/year):<br>
     ex: 07/16/2000<br>
-    <input type="text" name="startDate" required><br><br>
+    <input type="text" name="startDate" class="form-control" required><br>
 
     End Date (month/day/year) <br>
     ex: 07/16/2000: <br>
-    <input type="text" name="endDate" required><br><br>
+    <input type="text" name="endDate" class="form-control" required><br>
 
     Title: <br>
-    <input type="text" name="title" required><br><br>
+    <input type="text" name="title" class="form-control" required><br>
 
     Description: <br>
-    <input type="text" name="description" required><br><br>
+    <input type="text" name="description" class="form-control" required><br>
 
-    <button class="btn btn-sml btn-warning btn-block" type="submit" name="submitType" value="Submit">Submit</button>
+    <button class="btn btn-sml btn-primary btn-block" type="submit" name="submitType" value="Submit">Submit</button>
   </form>
 
 </div>
