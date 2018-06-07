@@ -220,7 +220,7 @@ def getTitle(gameID):
     for i in c.execute(cm):
         closeDatabase(db)
         return i[6]
-    
+
 def getPlaying(userID):
     db, c = openDatabase()
     cm = 'SELECT * FROM players WHERE userID == %d;' %userID
@@ -242,6 +242,39 @@ def getGameInfo(gameID):
         returned[stuff[i]] = x[i]
     closeDatabase(db)
     return returned
+
+
+# GAME PRORESSION
+
+#Function: killTarget
+#Description: Logs kill and assigns a new target
+#Arguments: player, target killed, game
+#Returns: void
+def killTarget(userID, targetID, gameID, time, date):
+    db, c = openDatabase()
+    target = getTarget(userID, gameID)
+    if (target == targetID):
+        targetsquared = getTarget(targetID, gameID)
+        if (targetsquared == userID):
+            #user won the game
+            pass
+        else:
+            setTarget(userID, gameID, targetsquared)
+            cm = 'UPDATE players SET totalkills = totalkills + 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+            c.execute(cm)
+            cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
+            c.execute(cm)
+            #kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT)
+            cm = 'INSERT INTO kills VALUES(%d, %d, %d, %d, %s, %s);' % (gameID, targetID, userID, 0, date, time)
+            c.execute(cm)
+    closeDatabase(db)
+
+def confirmKill(userID, gameID):
+    db, c = openDatabase()
+    cm = 'UPDATE kills SET confirmed = 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+    c.execute(cm)
+    closeDatabse()
+
 
 #createDatabase()
 #register("la","la234","lala")
