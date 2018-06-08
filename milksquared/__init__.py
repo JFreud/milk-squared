@@ -235,9 +235,10 @@ def profile():
     userID = db.getUserID(username)
     name = db.getName(username)
     games = db.getGames(userID)
+    gameIDs = db.getGamesID(userID)
     playing, p = db.getPlaying(userID)
     extension = db.getExtension(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, extension=extension, is_own=True, loggedin=True)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=playing, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):

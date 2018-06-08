@@ -55,8 +55,8 @@
         <div id="managing" class="tab-pane fade">
           <h3>Games Managing</h3>
           <ul>
-            {% for game in games %}
-            <li>{{game}}</li>
+            {% for game,gameID in games %}
+            <li><a href = {{url_for('game', idd = gameID)}}> {{game}} </a></li>
             {% endfor %}
           </ul>
         </div>
