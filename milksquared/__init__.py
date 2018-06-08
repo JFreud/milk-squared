@@ -285,6 +285,16 @@ def upload():
 def uploaded_file(filename):
     return send_from_directory(my_app.config['UPLOAD_FOLDER'], filename)
 
+@my_app.route('/submit_kill', methods = ['POST'])
+def submit_kill():
+    userID = db.getUserID(session["user"])
+    
+    return
+
+
+
+
+
 
 if __name__ == "__main__":
     my_app.debug = True #DANGER DANGER! Set to FALSE before deployment!
