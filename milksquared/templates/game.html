@@ -12,6 +12,8 @@ game keys:
 - title
 - description
 - adminname
+- targetID
+- targetname (only if targetID exists)
 -->
 
 {% block title %}
@@ -95,13 +97,14 @@ game keys:
         {% if playing %}
 		<div id="play" class="tab-pane fade">
           <h3>Player Things</h3>
-          <form action = "/submit_kill" method = "POST">
-            <button type = "button" value = "kill"> Mark Kill </button>
-            <button type = "button" value = "death"> Mark Death </button>
-          </form>
+          <br>
           <p>
-            some even more different content
+            Target Name: <a href="/profile/{{game['targetID']}}">{{game["targetname"]}}</a>
           </p>
+          <form action = "/submit_kill" method = "POST">
+            <button class="btn btn-sml btn-primary btn-block" value = "kill"> Mark Kill </button>
+            <button class="btn btn-sml btn-primary btn-block" value = "death"> Mark Death </button>
+          </form>
         </div>
         {% endif %}
 

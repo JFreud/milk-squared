@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import datetime
 
 # DATABSE CREATION/EDITING
 def createDatabase():
@@ -98,7 +99,7 @@ def crGame(adminID, key, typ, startDate, endDate, title, descr):
     cm = "SELECT COUNT(*) FROM games;"
     for i in c.execute(cm):
         gameID = i[0]
-    cm = 'INSERT INTO games VALUES(%d, %d, "%s", "%s", "%s", "%s", "%s", "%s");' %(gameID, adminID, key, typ, startDate, endDate, title, descr)
+    cm = 'INSERT INTO games VALUES(%d, %d, "%s", "%s", "%s", "%s", "%s", "%s", 0);' %(gameID, adminID, key, typ, startDate, endDate, title, descr)
     c.execute(cm)
     closeDatabase(db)
     return gameID
@@ -180,6 +181,7 @@ def getName(username):
 def getTarget(userID, gameID):
     db, c = openDatabase()
     cm = 'SELECT targetID FROM players WHERE userID == %d AND gameID == %d;' %(userID, gameID)
+    x = -2
     for i in c.execute(cm):
         x = i[0]
     closeDatabase(db)
@@ -258,7 +260,7 @@ def getGameInfo(gameID):
     db, c = openDatabase()
     cm = 'SELECT * FROM games WHERE gameID == %d;' %gameID
     returned = {}
-    stuff = ["gameID", "managerID", "key", "type", "dateStart", "dateEnd", "title", "description"]
+    stuff = ["gameID", "managerID", "key", "type", "dateStart", "dateEnd", "title", "description", "started"]
     x = list(c.execute(cm))[0]
     for i in range(0, len(x)):
         returned[stuff[i]] = x[i]

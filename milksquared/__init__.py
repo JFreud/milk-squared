@@ -141,6 +141,9 @@ def create_game():
     gameMode = request.form['gameMode']
     startDate = request.form['startDate']
     endDate = request.form['endDate']
+    if startDate > endDate:
+        flash("Start date must be before end date.")
+        return redirect(url_for("mkgame"))
     adminID = db.getUserID(username)
     joinKey = generateKey()
     title = request.form['title']
@@ -194,6 +197,9 @@ def game(idd):
         return redirect(url_for('root'))
     gamee = db.getGameInfo(idd)
     gamee["adminname"] = db.getUsername(gamee["managerID"])
+    gamee["targetID"] = db.getTarget(db.getUserID(session["user"]), gamee["gameID"])
+    if gamee["targetID"] >= 0:
+        gamee["targetname"] = db.getName(db.getUsername(gamee["targetID"]))
     managing = idd in db.getGamesID(db.getUserID(session["user"]))
     p, playing = db.getPlaying(db.getUserID(session["user"]))
     play = idd in playing
@@ -204,6 +210,10 @@ def startgame():
     if "user" not in session:
         return redirect(url_for('root'))
     gameID = int(request.form["gameID"])
+    numPlayers = db.getPlayers(gameID)
+    if len(numPlayers) < 3:
+        flash("Not enough people have joined the game.")
+        return redirect(url_for("game", idd = gameID))
     gameutils.assign_targets(gameID)
     flash("Game has started.")
     return redirect(url_for("game", idd = gameID))
@@ -248,7 +258,7 @@ def profile():
     gameIDs = db.getGamesID(userID)
     playing, p = db.getPlaying(userID)
     extension = db.getExtension(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=playing, extension=extension, is_own=True, loggedin=True)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):
@@ -258,13 +268,13 @@ def profileWithID(idd):
     person = idd == db.getUserID(session["user"])
     if person:
         return redirect(url_for("profile"))
-    username = session['user']
-    userID = db.getUserID(username)
+    username = db.getUsername(idd)
     name = db.getName(username)
-    games = db.getGames(userID)
-    playing, p = db.getPlaying(userID)
-    extension = db.getExtension(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=games, playing=playing, extension=extension, is_own=False, loggedin=True)
+    games = db.getGames(idd)
+    gameIDs = db.getGamesID(idd)
+    playing, p = db.getPlaying(idd)
+    extension = db.getExtension(idd)
+    return render_template("profile.html", username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), extension=extension, is_own=False, loggedin=True)
 
 @my_app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -284,10 +294,10 @@ def upload():
         destination = PFP_FOLDER + "/" + newname + "." + extension
         rename(source,destination)
         db.setExtension(userID, extension)
-        flash("Profile Picture Updated")
+        flash("Profile picture updated.")
         return redirect(url_for('profile'))
     else:
-        flash("File incompatible")
+        flash("File incompatible.")
         return redirect(url_for('profile'))
 
 
