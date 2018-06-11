@@ -108,9 +108,10 @@ game keys:
         {% if admin %}
         <div id="admin" class="tab-pane fade">
           <h3>Administrative Things</h3>
-          <p>
-            some extravagantly different content
-          </p>
+          <br>
+          <form action="/startgame" method="POST">
+            <button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Start the game!</button>
+          </form>
         </div>
         {% endif %}
 

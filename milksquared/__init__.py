@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from os import path, urandom, mkdir, rename
-from utils import db
+from utils import db, gameutils
 import random
 import json, urllib2, sys, sqlite3
+import datetime
 
 my_app = Flask(__name__)
 my_app.secret_key = 'i dont have a secret key'
@@ -192,12 +193,20 @@ def game(idd):
     if "user" not in session:
         return redirect(url_for('root'))
     gamee = db.getGameInfo(idd)
-    gamee["adminname"] = session["user"]
+    gamee["adminname"] = db.getUsername(gamee["managerID"])
     managing = idd in db.getGamesID(db.getUserID(session["user"]))
     p, playing = db.getPlaying(db.getUserID(session["user"]))
     play = idd in playing
     return render_template("game.html", game=gamee, admin=managing, playing=play, loggedin=True)
 
+@my_app.route('/startgame', methods=["POST"])
+def startgame():
+    if "user" not in session:
+        return redirect(url_for('root'))
+    gameID = int(request.form["gameID"])
+    gameutils.assign_targets(gameID)
+    flash("Game has started.")
+    return redirect(url_for("game", idd = gameID))
 
 # ==================== FINDGAME =======================
 # Adds a user to a game depending on the key inputted
@@ -218,11 +227,12 @@ def checkkey():
     if game == "doesn't exist":
         flash("The key you entered is invalid. Please try again.")
         return redirect(url_for("fndgame"))
-    else:
+    elif game not in db.getGamesID(db.getUserID(session["user"])):
         db.joinGame(game, db.getUserID(session["user"]))
         flash("Joined game " + str(game))
-        print game
         return redirect(url_for("game", idd=game))
+    flash("You can't join a game you're managing.")
+    return redirect(url_for("fndgame"))
 
 # ==================== PROFILE =======================
 # User Profile with info and stats and stuff
@@ -277,7 +287,7 @@ def upload():
         flash("Profile Picture Updated")
         return redirect(url_for('profile'))
     else:
-        flash("file incompatible")
+        flash("File incompatible")
         return redirect(url_for('profile'))
 
 

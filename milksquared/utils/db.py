@@ -8,7 +8,7 @@ def createDatabase():
     #for i in userStatList():
         #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
-    cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, type INTEGER, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT);"
+    cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, type INTEGER, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT, started INTEGER);"
     #for i in rulesForGame():
         #cm += ", " + i[0] + " " + i[1]
     #for i in gameStatList():
@@ -161,6 +161,14 @@ def setExtension(userID, extension):
     c.execute(cm)
     closeDatabase(db)
 
+def getUsername(userID):
+    db, c = openDatabase()
+    cm = 'SELECT username FROM users WHERE userID == %d;' %userID
+    for i in c.execute(cm):
+        x = i[0]
+    closeDatabase(db)
+    return x
+
 def getName(username):
     db, c = openDatabase()
     cm = 'SELECT name FROM users WHERE username == "%s";' %username
@@ -171,7 +179,7 @@ def getName(username):
 
 def getTarget(userID, gameID):
     db, c = openDatabase()
-    cm = 'SELECT target FROM players WHERE userID == %d AND gameID == %d;' %(userID, gameID)
+    cm = 'SELECT targetID FROM players WHERE userID == %d AND gameID == %d;' %(userID, gameID)
     for i in c.execute(cm):
         x = i[0]
     closeDatabase(db)
@@ -179,7 +187,7 @@ def getTarget(userID, gameID):
 
 def setTarget(userID, gameID, targetID):
     db, c = openDatabase()
-    cm = 'UPDATE players SET target = %d WHERE userID == %d AND gameID == %d;' %(targetID, userID, gameID)
+    cm = 'UPDATE players SET targetID = %d WHERE userID == %d AND gameID == %d;' %(targetID, userID, gameID)
     c.execute(cm)
     closeDatabase(db)
 
