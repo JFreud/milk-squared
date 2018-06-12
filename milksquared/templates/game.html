@@ -39,6 +39,11 @@ game keys:
       </div>
       {% if admin %}
       <div class="row">
+        <!-- <h2> ID: </h2>
+        <h2 id = "gameID"> {{game['gameID']}} </h2> -->
+        <input type = "hidden" id = "gameID" value = "{{game['gameID']}}"></input>
+      </div>
+      <div class="row">
         <h2>Key: {{ game['key'] }}</h2>
       </div>
       {% else %}
@@ -119,9 +124,10 @@ game keys:
 
         <div id="stats" class="tab-pane fade">
           <h3>Stats</h3>
-          <p>
-            some more different content
-          </p>
+          <svg width = "550" height = "400" class = "bar_chart"></svg>
+          <script>
+            makeBar();
+          </script>
         </div>
 
         {% if playing %}

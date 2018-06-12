@@ -485,6 +485,18 @@ def getNumGamesWon(userID):
     return
 
 
+#GAME STATS STUFF
+
+def getGameKills(gameID):
+    killDict = dict()
+    db, c = openDatabase()
+    cm = "SELECT * FROM players;"
+    for i in c.execute(cm):
+        if i[0] == gameID:
+            killDict[i[1]] = i[4] #creates entry and sets kills equal to game total
+    closeDatabase(db)
+    return killDict
+
 
 if __name__ == "__main__":
     createDatabase()

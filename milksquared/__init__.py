@@ -226,6 +226,14 @@ def game(idd):
     feed = db.getFeed(idd)
     return render_template("game.html", game=gamee, admin=managing, playing=play, feed=feed, loggedin=True)
 
+#AJAX call for game stats
+@my_app.route('/gamekillgraph/<idd>', methods=["POST"])
+def gamekillgraph(idd):
+    idd = int(idd)
+    gamekills = db.getGameKills(idd)
+    response = json.dumps({"gamekills":gamekills, "idd":idd})
+    return response
+
 @my_app.route('/startgame', methods=["POST"])
 def startgame():
     if "user" not in session:
@@ -394,11 +402,11 @@ def profile():
         avgkills = db.getAverageKills(userID)
     else:
         gamesplayed = 0
-        avgkills = -1
+        avgkills = "N/A"
     if userID in recordkills:
         recordkills = recordkills[userID]
     else:
-        recordkills = -1
+        recordkills = "N/A"
     return render_template("profile.html", totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
@@ -416,7 +424,24 @@ def profileWithID(idd):
     playing, p = db.getPlaying(idd)
     finished = db.getFinishedGames()
     extension = db.getExtension(idd)
-    return render_template("profile.html", username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
+    totalkills = db.getTotalKills()
+    gamesplayed = db.getNumGamesPlayed()
+    recordkills = db.getRecordKills()
+    if userID in totalkills:
+        totalkills = totalkills[userID]
+    else:
+        totalkills = 0
+    if userID in gamesplayed:
+        gamesplayed = gamesplayed[userID]
+        avgkills = db.getAverageKills(userID)
+    else:
+        gamesplayed = 0
+        avgkills = "N/A"
+    if userID in recordkills:
+        recordkills = recordkills[userID]
+    else:
+        recordkills = "N/A"
+    return render_template("profile.html", totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
 
 @my_app.route('/changeaccount', methods=['GET', 'POST'])
 def changeaccount():
