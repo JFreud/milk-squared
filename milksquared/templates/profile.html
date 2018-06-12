@@ -18,11 +18,11 @@
         <h2>Username: {{username}}</h2>
       </div>
       <div class="row">
-        <h2>PFP supports pdf, png, jpg, jpeg, and gif</h2>
         <img src = "../static/pfps/{{userID}}.{{extension}}" height = "300" width = "300" alt = "pfp">
         <form action = "/upload" method = "POST" enctype = "multipart/form-data">
         <input id = "upload" type = "file" name = "file" class="btn">
-        <input id = "submit" type = "submit" class = "btn btn-success">
+        <p>PFP supports pdf, png, jpg, jpeg, and gif</p>
+        <input id = "submit" type = "submit" class = "btn btn-primary">
       </form>
       </div>
     </div>

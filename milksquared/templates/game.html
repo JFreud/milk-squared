@@ -11,9 +11,13 @@ game keys:
 - dateEnd
 - title
 - description
+- started
 - adminname
 - targetID
 - targetname (only if targetID exists)
+- type (of game)
+- maxNumOfPeople
+- safeZones
 -->
 
 {% block title %}
@@ -75,16 +79,35 @@ game keys:
 
         <div id="rules" class="tab-pane fade">
           <h3>Rules</h3>
+          <br>
           <p>
-            some content
+            Type of game: {{game["type"]}}
+          </p>
+          <p>
+          	Maximum number of players: {{game["maxNumOfPeople"]}}
+          </p>
+          <p>
+          	Safe zones: {{game["safeZones"]}}
           </p>
         </div>
 
         <div id="players" class="tab-pane fade">
           <h3>Players</h3>
+          <br>
+          {% if started == 0 %}
+          {% for playerID, player in game["players"] %}
           <p>
-            some different content
+            <a href="/profile/{{playerID}}">{{player}}</a>
           </p>
+          {% endfor %}
+          {% else %}
+          <p>Green means the player is still alive; red means the player is dead.</p>
+          {% for playerID, player in game["players"] %}
+          <p>
+            <a id="alive" href="/profile/{{playerID}}">{{player}}</a>
+          </p>
+          {% endfor %}
+          {% endif %}
         </div>
 
         <div id="stats" class="tab-pane fade">
@@ -98,13 +121,21 @@ game keys:
 		<div id="play" class="tab-pane fade">
           <h3>Player Things</h3>
           <br>
+          {% if game["started"] == 1 %}
           <p>
             Target Name: <a href="/profile/{{game['targetID']}}">{{game["targetname"]}}</a>
           </p>
-          <form action = "/submit_kill" method = "POST">
-            <button class="btn btn-sml btn-primary btn-block" value = "kill"> Mark Kill </button>
-            <button class="btn btn-sml btn-primary btn-block" value = "death"> Mark Death </button>
+          <form action = "/submit_kill/{{game['gameID']}}" method = "POST">
+            <button class="btn btn-sml btn-primary btn-block" name="timefordeath" value = "kill"> Mark Kill </button>
+            <button class="btn btn-sml btn-primary btn-block" name="timefordeath" value = "death"> Mark Death </button>
           </form>
+          {% elif game["started"] == 0 %}
+          <p>The game hasn't started yet; hold on tight!</p>
+          {% else %}
+          <p>
+            Target Name: <a href="/profile/{{game['targetID']}}">{{game["targetname"]}}</a>
+          </p>
+          {% endif %}
         </div>
         {% endif %}
 
@@ -112,9 +143,11 @@ game keys:
         <div id="admin" class="tab-pane fade">
           <h3>Administrative Things</h3>
           <br>
+          {% if game["started"] == 0 %}
           <form action="/startgame" method="POST">
             <button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Start the game!</button>
           </form>
+          {% endif %}
         </div>
         {% endif %}
 

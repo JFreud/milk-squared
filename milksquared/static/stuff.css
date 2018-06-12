@@ -1,4 +1,10 @@
+#alive {
+    color: #33CA7F;
+}
 
+#dead {
+    color: red;
+}
 
 .blog-masthead{
     padding: 10px;

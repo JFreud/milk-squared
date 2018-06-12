@@ -4,7 +4,7 @@ from os import path, urandom, mkdir, rename
 from utils import db, gameutils
 import random
 import json, urllib2, sys, sqlite3
-import datetime
+from datetime import date, datetime
 
 my_app = Flask(__name__)
 my_app.secret_key = 'i dont have a secret key'
@@ -179,10 +179,15 @@ def create_rules():
         gameMode = session['gameType']
         gameID = session["game"]
         maxPeople = int(request.form['maxPeople'])
+        if maxPeople < 3:
+            flash("The maximum number of people has to be greater than 2.")
+            return render_template("rules.html", gameType = gameMode, loggedin=True)
         safeZones = request.form['safeZones']
         db.crRules(session["game"], gameMode, maxPeople, safeZones)
     else:
         db.deleteGame(session["game"])
+    session.pop("game")
+    session.pop("gameType")
     return redirect(url_for('profile'))
 
 # ==================== GAME =======================
@@ -195,11 +200,21 @@ def game(idd):
     idd = int(idd)
     if "user" not in session:
         return redirect(url_for('root'))
+    if db.getMaxPlayers(idd) == -1:
+        flash("Game is invalid.")
+        return redirect(url_for("profile"))
     gamee = db.getGameInfo(idd)
     gamee["adminname"] = db.getUsername(gamee["managerID"])
-    gamee["targetID"] = db.getTarget(db.getUserID(session["user"]), gamee["gameID"])
+    gamee["targetID"] = db.getTarget(db.getUserID(session["user"]), idd, True)
+    playerIDs, players = db.getPlayers(idd)
+    gamee["players"] = zip(playerIDs, players)
+    print gamee["players"]
     if gamee["targetID"] >= 0:
         gamee["targetname"] = db.getName(db.getUsername(gamee["targetID"]))
+    if gamee["type"] == 0:
+        gamee["type"] = "Assassins - Rapid Fire"
+    else:
+        gamee["type"] = "Assassins - Last Man Standing"
     managing = idd in db.getGamesID(db.getUserID(session["user"]))
     p, playing = db.getPlaying(db.getUserID(session["user"]))
     play = idd in playing
@@ -210,13 +225,38 @@ def startgame():
     if "user" not in session:
         return redirect(url_for('root'))
     gameID = int(request.form["gameID"])
-    numPlayers = db.getPlayers(gameID)
+    numPlayers, n = db.getPlayers(gameID)
     if len(numPlayers) < 3:
         flash("Not enough people have joined the game.")
         return redirect(url_for("game", idd = gameID))
     gameutils.assign_targets(gameID)
+    db.startgame(gameID)
     flash("Game has started.")
     return redirect(url_for("game", idd = gameID))
+
+@my_app.route('/submit_kill/<idd>', methods = ['POST'])
+def submit_kill(idd):
+    idd = int(idd)
+    if "user" not in session:
+        return redirect(url_for('root'))
+    typ = request.form["timefordeath"]
+    if typ == "kill":
+        userID = db.getUserID(session["user"])
+        targetID = db.getTarget(userID, idd, True)
+    else:
+        targetID = db.getUserID(session["user"])
+        userID = db.getTarget(targetID, idd, False)
+    current = datetime.now()
+    date = str(current.year) + "-" + str(current.month) + "-" + str(current.day)
+    time = str(current.hour) + ":" + str(current.minute) + ":" + str(current.second)
+    confirmed = db.killTarget(userID, targetID, idd, time, date)
+    if confirmed:
+        flash("Kill was confirmed.")
+    elif typ == "kill":
+        flash("Kill was submitted; please wait for your target to confirm your kill.")
+    else:
+        flash("Kill was submitted; please wait for your killer to confirm your death.")
+    return redirect(url_for("game", idd=idd))
 
 # ==================== FINDGAME =======================
 # Adds a user to a game depending on the key inputted
@@ -238,6 +278,9 @@ def checkkey():
         flash("The key you entered is invalid. Please try again.")
         return redirect(url_for("fndgame"))
     elif game not in db.getGamesID(db.getUserID(session["user"])):
+        if len(db.getPlayers(game)) == db.getMaxPlayers(game):
+            flash("The game you're trying to join already has its max number of players.")
+            return redirect(url_for("game", idd=game))
         db.joinGame(game, db.getUserID(session["user"]))
         flash("Joined game " + str(game))
         return redirect(url_for("game", idd=game))
@@ -304,12 +347,6 @@ def upload():
 @my_app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(my_app.config['UPLOAD_FOLDER'], filename)
-
-@my_app.route('/submit_kill', methods = ['POST'])
-def submit_kill():
-    userID = db.getUserID(session["user"])
-    
-    return
 
 
 

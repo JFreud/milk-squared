@@ -45,7 +45,7 @@ def get_targets( players ):
         gameID: the id of the game for which targets should be assigned
 '''
 def assign_targets( gameID ):
-    players = getPlayers( gameID )
+    players, p = getPlayers( gameID )
     targets = get_targets( players )
     for player in targets:
         setTarget( player, gameID, targets[player] )

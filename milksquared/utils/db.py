@@ -2,7 +2,7 @@ import sqlite3
 import os
 import datetime
 
-# DATABSE CREATION/EDITING
+# DATABASE CREATION/EDITING
 def createDatabase():
     db, c = openDatabase()
     cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT, extension TEXT);"
@@ -178,12 +178,17 @@ def getName(username):
     closeDatabase(db)
     return x
 
-def getTarget(userID, gameID):
+def getTarget(userID, gameID, boo):
     db, c = openDatabase()
-    cm = 'SELECT targetID FROM players WHERE userID == %d AND gameID == %d;' %(userID, gameID)
-    x = -2
-    for i in c.execute(cm):
-        x = i[0]
+    if boo:
+        cm = 'SELECT targetID FROM players WHERE userID == %d AND gameID == %d;' %(userID, gameID)
+        x = -2
+        for i in c.execute(cm):
+            x = i[0]
+    else:
+        cm = 'SELECT userID FROM players WHERE targetID == %d AND gameID == %d;' %(userID, gameID)
+        for i in c.execute(cm):
+            x = i[0]
     closeDatabase(db)
     return x
 
@@ -196,11 +201,13 @@ def setTarget(userID, gameID, targetID):
 def getPlayers(gameID):
     db, c = openDatabase()
     cm = 'SELECT userID FROM players WHERE gameID == %d;' %gameID
-    listy = []
+    listy0 = []
+    listy1 = []
     for i in c.execute(cm):
-        listy.append(i[0])
+        listy0.append(i[0])
+        listy1.append(getName(getUsername(i[0])))
     closeDatabase(db)
-    return listy
+    return listy0, listy1
 
 def getGameStats(gameID):
     db, c = openDatabase()
@@ -225,7 +232,8 @@ def getGames(userID):
     cm = 'SELECT * FROM games WHERE managerID == %d;' %userID
     listy = []
     for i in c.execute(cm):
-        listy.append(i[6])
+        if getMaxPlayers(i[0]) != -1:
+            listy.append(i[6])
     closeDatabase(db)
     return listy
 
@@ -234,7 +242,8 @@ def getGamesID(userID):
     cm = 'SELECT * FROM games WHERE managerID == %d;' %userID
     listy = []
     for i in c.execute(cm):
-        listy.append(i[0])
+        if getMaxPlayers != -1:
+            listy.append(i[0])
     closeDatabase(db)
     return listy
 
@@ -256,6 +265,18 @@ def getPlaying(userID):
     closeDatabase(db)
     return listy1, listy2
 
+def getMaxPlayers(gameID):
+    db, c = openDatabase()
+    cm = "SELECT maxPeople FROM rules WHERE gameID == %d" %gameID
+    x = -1
+    try:
+        for i in c.execute(cm):
+            x = i[0]
+    except:
+        x = -1
+    closeDatabase(db)
+    return x
+
 def getGameInfo(gameID):
     db, c = openDatabase()
     cm = 'SELECT * FROM games WHERE gameID == %d;' %gameID
@@ -264,40 +285,63 @@ def getGameInfo(gameID):
     x = list(c.execute(cm))[0]
     for i in range(0, len(x)):
         returned[stuff[i]] = x[i]
+    cm = 'SELECT * FROM rules WHERE gameID == %d;' %gameID
+    stuff = [0, "type", "maxNumOfPeople", "safeZones"]
+    x = list(c.execute(cm))[0]
+    for i in range(1, len(x)):
+        returned[stuff[i]] = x[i]
     closeDatabase(db)
     return returned
 
 
-# GAME PRORESSION
+# GAME PROGRESSION
 
-#Function: killTarget
-#Description: Logs kill and assigns a new target
-#Arguments: player, target killed, game
-#Returns: void
-def killTarget(userID, targetID, gameID, time, date):
+def startgame(gameID):
     db, c = openDatabase()
-    target = getTarget(userID, gameID)
-    if (target == targetID):
-        targetsquared = getTarget(targetID, gameID)
-        if (targetsquared == userID):
-            #user won the game
-            pass
-        else:
-            setTarget(userID, gameID, targetsquared)
-            cm = 'UPDATE players SET totalkills = totalkills + 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
-            c.execute(cm)
-            cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
-            c.execute(cm)
-            #kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT)
-            cm = 'INSERT INTO kills VALUES(%d, %d, %d, %d, "%s", "%s");' % (gameID, targetID, userID, 0, date, time)
-            c.execute(cm)
+    cm = 'UPDATE games SET started = 1 WHERE gameID == %d' %gameID
+    c.execute(cm)
     closeDatabase(db)
 
-def confirmKill(userID, gameID):
+#ALL THE KILLING STUFF
+
+def killTarget(userID, targetID, gameID, time, date):
     db, c = openDatabase()
-    cm = 'UPDATE kills SET confirmed = 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+    if alreadySubmitted(userID, targetID, gameID):
+        confirmKill(userID, gameID, targetID)
+        returned = True
+    else:
+        cm = 'INSERT INTO kills VALUES(%d, %d, %d, %d, "%s", "%s");' % (gameID, targetID, userID, 0, date, time)
+        c.execute(cm)
+        returned = False
+    closeDatabase(db)
+    return returned
+
+def confirmKill(userID, gameID, targetID):
+    db, c = openDatabase()
+    cm = 'UPDATE kills SET confirmed = 1 WHERE userWhoKilledID == %d AND gameID == %d;' % (userID, gameID)
     c.execute(cm)
-    closeDatabse()
+    closeDatabase(db)
+    db, c = openDatabase()
+    targetsquared = getTarget(targetID, gameID, True)
+    if (targetsquared == userID):
+        #user won the game
+        pass
+    else:
+        setTarget(userID, gameID, targetsquared)
+        cm = 'UPDATE players SET totalkills = totalkills + 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+        c.execute(cm)
+        cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
+        c.execute(cm)
+    closeDatabase(db)
+
+def alreadySubmitted(userID, targetID, gameID):
+    db, c = openDatabase()
+    cm = "SELECT * FROM kills WHERE userWhoKilledID == %d AND userKilledID == %d AND gameID == %d;" %(userID, targetID, gameID)
+    x = False
+    for i in c.execute(cm):
+        x = True
+    closeDatabase(db)
+    return x
 
 if __name__ == "__main__":
     createDatabase()

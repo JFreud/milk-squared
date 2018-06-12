@@ -49,3 +49,6 @@ modified profile.html so that it had same format as game.html, among other small
 tiffanyC -- 2018-06-07 11:27:26
 prettified some stuff
 
+tiffanyC -- 2018-06-11 22:00:47
+okay so the basic game functionality works (starting up a game, assigning targets, killing/confirming the kill) among other things that i just added on cuz i wanted to, i'm about to cry omg, i'll do more in a bit ahhhhhh i'm too happy
+
