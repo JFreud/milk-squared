@@ -108,3 +108,6 @@ ajax call to get game stats from db
 
 freudenbergJ -- 2018-06-12 17:55:31
 added d3 graph. rn it's just big black bars without text but at least it shows up.
+
+freudenbergJ -- 2018-06-12 18:30:09
+bar chart mostly works now. Added labels + margins + spacing. Still ugly but recognizable.

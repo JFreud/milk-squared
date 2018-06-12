@@ -23,10 +23,14 @@ var makeBar = function() {
     });
   console.log(gamekills);
   var data = d3.values(gamekills);
+  var ids = Object.keys(gamekills);
+  console.log(ids);
 
   var chart = d3.select(".chart");
-  var height = 400;
-  var width = 550;
+  var margin = {top: 50, right: 50, bottom: 20, left: 20}
+  var height = 400 - margin.top - margin.bottom;
+  var width = 550 - margin.left - margin.right;
+  var spacing = 10;
   console.log(height);
   console.log(width);
   var xAxis = d3.scaleLinear()
@@ -37,11 +41,16 @@ var makeBar = function() {
             return "translate(0," + i * barHeight + ")"; });
   bar.append("rect").attr("width", function(d) {
             return xAxis(d); })
-        .attr("height", barHeight);
-   bar.append("text")
+        .attr("height", barHeight - spacing).style("fill", "red").style("stroke", "black");
+  bar.append("text")
         .attr("x", function(d) {
-            return xAxis(d) + 20; })
+            return 20; })
         .attr("y", barHeight / 2)
         .text(function(d) { return d; });
+  bar.append("text")
+        .attr("x", function(d) {
+            return 40; })
+        .attr("y", barHeight / 2)
+        .text(function(d, i) { return ids[i]; });
 
 }

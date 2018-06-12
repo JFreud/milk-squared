@@ -183,10 +183,12 @@ def getName(username):
     closeDatabase(db)
     return x
 
-def getNameFromID(userID, db, c):
+def getNameFromID(userID):
+    db, c = openDatabase()
     cm = 'SELECT name FROM users WHERE userID == %d;' %userID
     for i in c.execute(cm):
         x = i[0]
+    closeDatabase(db)
     return x
 
 def getTarget(userID, gameID, boo):
@@ -495,13 +497,16 @@ def getNumGamesWon(userID):
 
 def getGameKills(gameID):
     killDict = dict()
+    newDict = dict()
     db, c = openDatabase()
     cm = "SELECT * FROM players;"
     for i in c.execute(cm):
         if i[0] == gameID:
             killDict[i[1]] = i[4] #creates entry and sets kills equal to game total
     closeDatabase(db)
-    return killDict
+    for key in killDict:
+        newDict[getNameFromID(int(key))] = killDict[key]
+    return newDict
 
 
 if __name__ == "__main__":
