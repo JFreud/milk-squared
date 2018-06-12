@@ -382,7 +382,24 @@ def profile():
     playing, p = db.getPlaying(userID)
     finished = db.getFinishedGames()
     extension = db.getExtension(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
+    totalkills = db.getTotalKills()
+    gamesplayed = db.getNumGamesPlayed()
+    recordkills = db.getRecordKills()
+    if userID in totalkills:
+        totalkills = totalkills[userID]
+    else:
+        totalkills = 0
+    if userID in gamesplayed:
+        gamesplayed = gamesplayed[userID]
+        avgkills = db.getAverageKills(userID)
+    else:
+        gamesplayed = 0
+        avgkills = -1
+    if userID in recordkills:
+        recordkills = recordkills[userID]
+    else:
+        recordkills = -1
+    return render_template("profile.html", totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):

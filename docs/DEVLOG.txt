@@ -98,3 +98,6 @@ total games played of each player
 record kills of a given player
 average kills of a given player
 started to work on fxn to get num games won but have to think more about algorithm to find number of games where a player is the only one alive
+
+freudenbergJ - 2018-06-12 15:21:07
+added grid with player stats to profile.html
