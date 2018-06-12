@@ -388,6 +388,7 @@ def killTarget(userID, targetID, gameID, time, date):
     return returned
 
 def confirmKill(userID, gameID, targetID, db, c):
+    # LEAVE THESE OPEN DB LINES COMMENTED!!! YOU CAN ONLY OPEN A DB ONCE AND HAVE TO CLOSE BEFORE OPENING AGAIN!
     # db, c = openDatabase()
     cm = 'UPDATE kills SET confirmed = 1 WHERE userWhoKilledID == %d AND gameID == %d;' % (userID, gameID)
     c.execute(cm)

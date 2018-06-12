@@ -1,3 +1,13 @@
+everyone -- 2018-05-15
+made design doc
+
+freudenbergJ -- 2018-05-17
+added wsgi and conf files
+deployed app on droplet
+
+freudenbergJ -- 2018-05-21
+created a flask app skeleton with routes to be filled out
+
 goldmanJ -- 2018-05-21 13:44:31
 made devlog
 
@@ -18,6 +28,18 @@ redid database schema (in design doc)
 
 tiffanyC -- 2018-05-22 19:10:28
 made database and worked on some database functions
+
+freudenbergJ -- 2018-05-23 20:30
+restructured app to work with our own deployment
+secret key is set, needed for sessions?
+
+freudenbergJ -- 2018-05-24 21:15
+files no longer have hyphen because python doesn't like that
+deployed on milksquared.space
+
+freudenbergJ -- 2018-05-29 07:30
+register account and login works
+can create game in db but doesn't show up yet
 
 tiffanyC -- 2018-05-30 01:00:12
 so... a lot of things happened
@@ -49,6 +71,13 @@ modified profile.html so that it had same format as game.html, among other small
 tiffanyC -- 2018-06-07 11:27:26
 prettified some stuff
 
+freudenbergJ -- 2018-06-07 16:23
+added killtarget function to db, needs work
+added file upload for pfp
+added multiple file extensions, not just jpg
+linked game page from list of games
+mark kill and death buttons
+
 tiffanyC -- 2018-06-11 22:00:47
 okay so the basic game functionality works (starting up a game, assigning targets, killing/confirming the kill) among other things that i just added on cuz i wanted to, i'm about to cry omg, i'll do more in a bit ahhhhhh i'm too happy
 
@@ -58,3 +87,6 @@ i allowed admin to change game settings and user to change account settings, amo
 tiffanyC -- 2018-06-12 11:31:28
 did some stuff for feed and rapid fire assassin, probably did more stuff but i'm blanking
 
+freudenbergJ -- 2018-06-12 13:51:36
+think semaphores causing locked db
+functions now pass db and cursor as parameters to avoid (might show up again later)
