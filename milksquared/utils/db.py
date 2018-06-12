@@ -420,6 +420,77 @@ def alreadySubmitted(userID, targetID, gameID, db, c):
     # closeDatabase(db)
     return x
 
+# PLAYER STATS STUFFS
+
+#total kills of a player across all games
+def getTotalKills():
+    totalDict = dict()
+    db, c = openDatabase()
+    cm = "SELECT * FROM players;"
+    for i in c.execute(cm):
+        if i[1] in totalDict:
+            totalDict[i[1]] += i[4] #adds kills from that game to total
+        else:
+            totalDict[i[1]] = i[4] #creates entry and sets kills equal to game total
+    closeDatabase(db)
+    return totalDict
+
+#total games played of a player
+def getNumGamesPlayed():
+    totalDict = dict()
+    db, c = openDatabase()
+    cm = "SELECT * FROM players;"
+    for i in c.execute(cm):
+        if i[1] in totalDict:
+            totalDict[i[1]] += 1 #adds one to a user's game count
+        else:
+            totalDict[i[1]] = 1 #creates game count and sets games = to 1
+    closeDatabase(db)
+    return totalDict
+
+#highest kills gotten in a game
+def getRecordKills():
+    recordDict = dict()
+    db, c = openDatabase()
+    cm = "SELECT * FROM players;"
+    for i in c.execute(cm):
+        if i[1] in recordDict:
+            if i[4] > recordDict[i[1]]:
+                recordDict[i[1]] = i[4]
+        else:
+            recordDict[i[1]] = i[4]
+    closeDatabase(db)
+    return recordDict
+
+#average kills per game of a player
+def getAverageKills(userID):
+    killTotal = float(getTotalKills()[userID])
+    gamesPlayed = float(getNumGamesPlayed()[userID])
+    return killTotal / gamesPlayed
+
+#number of games a player has won
+def getNumGamesWon(userID):
+    #count number of games where everyone else is dead and you are not
+    totalDict = dict()
+    db, c = openDatabase()
+    cm = "SELECT * FROM players;"
+    gameID = 0
+    winner = False
+    for i in c.execute(cm):
+        # if i[0] == gameID and i[2] == 0 and winner == False:
+        #     winner == True
+        # elif i[0] == gameID and i[2] == 0 and winner == True:
+        #     winner == False
+        pass
+    return
+
+
+
 if __name__ == "__main__":
     createDatabase()
+    #testing player stat functions
+    # print getTotalKills()
+    # print getNumGamesPlayed()
+    # print getRecordKills()
+    # print getAverageKills(1)
     #register("la","la234","lala")
