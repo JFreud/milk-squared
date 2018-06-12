@@ -19,11 +19,6 @@
       </div>
       <div class="row">
         <img src = "../static/pfps/{{userID}}.{{extension}}" height = "300" width = "300" alt = "pfp">
-        <form action = "/upload" method = "POST" enctype = "multipart/form-data">
-        <input id = "upload" type = "file" name = "file" class="btn">
-        <p>PFP supports pdf, png, jpg, jpeg, and gif</p>
-        <input id = "submit" type = "submit" class = "btn btn-primary">
-      </form>
       </div>
     </div>
 
@@ -47,7 +42,9 @@
           <h3>Games Playing</h3>
           <ul>
             {% for game, gameID in playing %}
+            {% if gameID not in finished %}
             <li><a href = {{url_for('game', idd = gameID)}}>{{game}}</a></li>
+            {% endif %}
             {% endfor %}
           </ul>
         </div>
@@ -63,10 +60,11 @@
 
         <div id="past" class="tab-pane fade">
           <h3>Past Games</h3>
-          <p>
-            I don't actually think we have anything for past games yet but
-            this could be kind of cool.
-          </p>
+            {% for game, gameID in playing %}
+            {% if gameID in finished %}
+            <li><a href = {{url_for('game', idd = gameID)}}>{{game}}</a></li>
+            {% endif %}
+            {% endfor %}
         </div>
 
         <div id="stats" class="tab-pane fade">
@@ -78,10 +76,26 @@
 
         {% if is_own %}
         <div id="user" class="tab-pane fade">
-          <h3>Player Things</h3>
-          <p>
-            account stuff user can do
-          </p>
+          <h3>Account Things</h3>
+          <br>
+          <form method = "POST" action="/changeaccount" class="form-signin">
+            <label for="inputEmail">Full name:</label>
+            <input type="name" id="inputEmail" name="name" class="form-control" placeholder="Full name" autofocus><br>
+            <label for="inputEmail">Username:</label>
+            <input type="user" id="inputEmail" name="username" class="form-control" placeholder="Username" autofocus><br>
+            <label for="inputPassword">Password:</label>
+            <input type="password" id="inputPassword" name = "password" class="form-control" placeholder="Password" ><br>
+            <label for="inputPassword">Confirm password:</label>
+            <input type="password" id="inputPasswordconfirm" name = "confirm" class="form-control" placeholder="Retype password" ><br>
+            <button class="btn btn-sml btn-primary btn-block" type="submit" name="submitType" value="Register">Update account settings</button>
+          </form>
+          <br>
+          <p>Change your profile picture here:</p>
+          <form action = "/upload" method = "POST" enctype = "multipart/form-data">
+            <input id = "upload" type = "file" name = "file" class="btn">
+            <p>Profile pic supports pdf, png, jpg, jpeg, and gif</p>
+            <input id = "submit" type = "submit" class = "btn btn-primary" value="Upload picture">
+          </form>
         </div>
         {% endif %}
 

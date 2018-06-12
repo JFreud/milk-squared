@@ -6,14 +6,8 @@ import datetime
 def createDatabase():
     db, c = openDatabase()
     cm = "CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY, username TEXT, password BLOB, name TEXT, extension TEXT);"
-    #for i in userStatList():
-        #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, type INTEGER, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT, started INTEGER);"
-    #for i in rulesForGame():
-        #cm += ", " + i[0] + " " + i[1]
-    #for i in gameStatList():
-        #cm += ", " + i[0] + " " + i[1]
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER);"
     c.execute(cm)
@@ -31,19 +25,6 @@ def openDatabase():
 def closeDatabase(db):
     db.commit() #save changes
     db.close()  #close database
-
-def gameStatList():
-    return [["numberLeft", "INTEGER"], ["totalKills", "INTEGER"], ["mostKillsPerDay", "TEXT"], ["mostKillsTotal", "TEXT"], ["mostKillsToday", "TEXT"]]
-
-def userStatList():
-    return [["averageKillsPerGame", "REAL"], ["averageDailyKills", "REAL"]]
-
-def rulesForGame():
-    return [["maxNumOfPeople", "INTEGER"], ["safeZones", "TEXT"]]
-
-
-
-
 
 # FUNCTIONS!!!
 
@@ -80,17 +61,12 @@ def verify(username, password):
     closeDatabase(db)
     return password == true_pass[0].encode("ascii")
 
-def changePass(username, oldPass, newPass):
-    #changes a user's password
-    #returns True
+def changeAccountSettings(username, changed, column):
+    #changes a user's account settings
     db, c = openDatabase()
-    cm = 'UPDATE users SET password = "%s" WHERE username == "%s";' %(newPass, username)
+    cm = 'UPDATE users SET %s = "%s" WHERE username == "%s";' %(column, changed, username)
     c.execute(cm)
     closeDatabase(db)
-    return True
-
-
-
 
 # GAME MANAGEMENT
 def crGame(adminID, key, typ, startDate, endDate, title, descr):
@@ -131,6 +107,28 @@ def joinGame(gameID, userID):
     #adds player into a game
     db, c = openDatabase()
     cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0);' %(gameID, userID)
+    c.execute(cm)
+    closeDatabase(db)
+
+def leaveGame(userID, gameID):
+    #removes player from game
+    db, c = openDatabase()
+    cm = 'DELETE FROM players WHERE gameID == %d and userID == %d;' %(gameID, userID)
+    c.execute(cm)
+    closeDatabase(db)
+
+def changeGameSettings(gameID, changed, column):
+    db, c = openDatabase()
+    if column == "maxPeople":
+        cm = 'UPDATE rules SET %s = %d WHERE gameID = %d;' %(column, changed, gameID)
+    elif column == "safeZones":
+        cm = 'UPDATE rules SET %s = "%s" WHERE gameID = %d;' %(column, changed, gameID)
+    elif column == "startDate":
+        cm = 'UPDATE games SET dateStart = "%s" WHERE gameID = %d;' %(changed, gameID)
+    elif column == "endDate":
+        cm = 'UPDATE games SET dateEnd = "%s" WHERE gameID = %d;' %(changed, gameID)
+    else:
+        cm = 'UPDATE games SET %s = "%s" WHERE gameID = %d;' %(column, changed, gameID)
     c.execute(cm)
     closeDatabase(db)
 
@@ -265,6 +263,24 @@ def getPlaying(userID):
     closeDatabase(db)
     return listy1, listy2
 
+def getPlayersAlive(gameID):
+    db, c = openDatabase()
+    cm = "SELECT * FROM players WHERE gameID = %d AND dead = 0" %gameID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[1])
+    closeDatabase(db)
+    return listy
+
+def getFinishedGames():
+    db, c = openDatabase()
+    cm = "SELECT gameID FROM games WHERE started = 2" 
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[0])
+    closeDatabase(db)
+    return listy
+
 def getMaxPlayers(gameID):
     db, c = openDatabase()
     cm = "SELECT maxPeople FROM rules WHERE gameID == %d" %gameID
@@ -293,12 +309,17 @@ def getGameInfo(gameID):
     closeDatabase(db)
     return returned
 
-
 # GAME PROGRESSION
 
 def startgame(gameID):
     db, c = openDatabase()
     cm = 'UPDATE games SET started = 1 WHERE gameID == %d' %gameID
+    c.execute(cm)
+    closeDatabase(db)
+
+def endgame(gameID):
+    db, c = openDatabase()
+    cm = 'UPDATE games SET started = 2 WHERE gameID == %d' %gameID
     c.execute(cm)
     closeDatabase(db)
 
@@ -328,10 +349,10 @@ def confirmKill(userID, gameID, targetID):
         pass
     else:
         setTarget(userID, gameID, targetsquared)
-        cm = 'UPDATE players SET totalkills = totalkills + 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
-        c.execute(cm)
-        cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
-        c.execute(cm)
+    cm = 'UPDATE players SET totalkills = totalkills + 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+    c.execute(cm)
+    cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
+    c.execute(cm)
     closeDatabase(db)
 
 def alreadySubmitted(userID, targetID, gameID):

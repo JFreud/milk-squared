@@ -52,3 +52,6 @@ prettified some stuff
 tiffanyC -- 2018-06-11 22:00:47
 okay so the basic game functionality works (starting up a game, assigning targets, killing/confirming the kill) among other things that i just added on cuz i wanted to, i'm about to cry omg, i'll do more in a bit ahhhhhh i'm too happy
 
+tiffanyC -- 2018-06-12 00:15:46
+i allowed admin to change game settings and user to change account settings, among a bunch of other small things that i thought were necessary (like announcing winners and stuff?), i'm honestly kinda done for the day but i want to work more tomorrow morning before i hop on a plane
+

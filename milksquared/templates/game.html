@@ -18,6 +18,8 @@ game keys:
 - type (of game)
 - maxNumOfPeople
 - safeZones
+- players
+- playersAlive
 -->
 
 {% block title %}
@@ -104,7 +106,11 @@ game keys:
           <p>Green means the player is still alive; red means the player is dead.</p>
           {% for playerID, player in game["players"] %}
           <p>
+          	{% if playerID in game["playersAlive"] %}
             <a id="alive" href="/profile/{{playerID}}">{{player}}</a>
+            {% else %}
+            <a id="dead" href="/profile/{{playerID}}">{{player}}</a>
+            {% endif %}
           </p>
           {% endfor %}
           {% endif %}
@@ -131,6 +137,11 @@ game keys:
           </form>
           {% elif game["started"] == 0 %}
           <p>The game hasn't started yet; hold on tight!</p>
+          <br>
+          <p>But if you don't want to play anymore...</p>
+          <form action = "/leavegame/{{game['gameID']}}" method = "POST">
+            <button class="btn btn-sml btn-primary btn-block">Leave Game</button>
+          </form>
           {% else %}
           <p>
             Target Name: <a href="/profile/{{game['targetID']}}">{{game["targetname"]}}</a>
@@ -143,10 +154,38 @@ game keys:
         <div id="admin" class="tab-pane fade">
           <h3>Administrative Things</h3>
           <br>
+          {% if game["started"] == 0 or game["started"] == 1 %}
+          <p>Change some stuff about the game here!</p>
+          <form action="/changegame" method="POST">
+          	Start Date (month/day/year):<br>
+    		<input type="date" name="startDate" class="form-control" ><br>
+    		End Date:<br>
+    		<input type="date" name="endDate" class="form-control" ><br>
+    		Title: <br>
+    		<input type="text" name="title" class="form-control" ><br>
+    		Description: <br>
+    		<input type="text" name="description" class="form-control"><br>
+    		{% if game["started"] == 0 %}
+    		Max number of people:<br>
+    		<input type="number" name="maxPeople"><br><br>
+    		{% endif %}
+			Safe zones <br>
+    		ex: Cafeteria, library <br>
+    		<input type="text" name="safeZones"><br><br>
+          	<button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Submit changes</button>
+          </form>
+          <br>
           {% if game["started"] == 0 %}
           <form action="/startgame" method="POST">
             <button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Start the game!</button>
           </form>
+          {% elif game["started"] == 1 %}
+          <form action="/endgame/{{game['gameID']}}" method="POST">
+          	<button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">End the game!</button>
+          </form>
+          {% endif %}
+          {% else %}
+          <p>The game has ended; good job hosting!</p>
           {% endif %}
         </div>
         {% endif %}

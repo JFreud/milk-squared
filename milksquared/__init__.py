@@ -6,6 +6,8 @@ import random
 import json, urllib2, sys, sqlite3
 from datetime import date, datetime
 
+import sys
+
 my_app = Flask(__name__)
 my_app.secret_key = 'i dont have a secret key'
 
@@ -180,7 +182,7 @@ def create_rules():
         gameID = session["game"]
         maxPeople = int(request.form['maxPeople'])
         if maxPeople < 3:
-            flash("The maximum number of people has to be greater than 2.")
+            flash("The maximum number of people has to be at least 3.")
             return render_template("rules.html", gameType = gameMode, loggedin=True)
         safeZones = request.form['safeZones']
         db.crRules(session["game"], gameMode, maxPeople, safeZones)
@@ -208,6 +210,7 @@ def game(idd):
     gamee["targetID"] = db.getTarget(db.getUserID(session["user"]), idd, True)
     playerIDs, players = db.getPlayers(idd)
     gamee["players"] = zip(playerIDs, players)
+    gamee["playersAlive"] = db.getPlayersAlive(idd)
     print gamee["players"]
     if gamee["targetID"] >= 0:
         gamee["targetname"] = db.getName(db.getUsername(gamee["targetID"]))
@@ -234,6 +237,15 @@ def startgame():
     flash("Game has started.")
     return redirect(url_for("game", idd = gameID))
 
+@my_app.route('/endgame/<idd>', methods=["POST"])
+def endgame(idd):
+    idd = int(idd)
+    if "user" not in session:
+        return redirect(url_for('root'))
+    db.endgame(idd)
+    flash("Game has ended.")
+    return redirect(url_for("game", idd=idd))
+
 @my_app.route('/submit_kill/<idd>', methods = ['POST'])
 def submit_kill(idd):
     idd = int(idd)
@@ -251,16 +263,44 @@ def submit_kill(idd):
     time = str(current.hour) + ":" + str(current.minute) + ":" + str(current.second)
     confirmed = db.killTarget(userID, targetID, idd, time, date)
     if confirmed:
-        flash("Kill was confirmed.")
+        n = len(db.getPlayersAlive(idd))
+        if n == 1:
+            flash("The winner of the game has been determined!")
+            return redirect(url_for("endgame", idd=idd))
+        else:
+            flash("Kill was confirmed.")
     elif typ == "kill":
         flash("Kill was submitted; please wait for your target to confirm your kill.")
     else:
-        flash("Kill was submitted; please wait for your killer to confirm your death.")
+        flash("Death was submitted; please wait for your killer to confirm your death.")
     return redirect(url_for("game", idd=idd))
+
+@my_app.route('/changegame', methods=["POST"])
+def changegame():
+    if "user" not in session:
+        return redirect(url_for('root'))
+    gameID = int(request.form["gameID"])
+    possibilities = ["startDate", "endDate", "title", "description", "maxPeople", "safeZones"]
+    for i in possibilities:
+        try:
+            changed = request.form[i]
+            if i == "maxPeople":
+                changed = int(changed)
+                if changed < 3:
+                    flash("The maximum number of people has to be at least 3.")
+                    continue
+            if changed != "":
+                db.changeGameSettings(gameID, changed, i)
+        except:
+            print i, "didn't work"
+            print "Unexpected error:", sys.exc_info()
+    flash("Changed settings for the game.")
+    return redirect(url_for("game", idd=gameID))
 
 # ==================== FINDGAME =======================
 # Adds a user to a game depending on the key inputted
 # The layout of this is unclear
+# This section will also include leavegame
 
 @my_app.route('/fndgame')
 def fndgame():
@@ -287,6 +327,15 @@ def checkkey():
     flash("You can't join a game you're managing.")
     return redirect(url_for("fndgame"))
 
+@my_app.route("/leavegame/<idd>", methods=["POST"])
+def leavegame(idd):
+    if "user" not in session:
+        return redirect(url_for("root"))
+    idd = int(idd)
+    db.leaveGame(db.getUserID(session["user"]), idd)
+    flash("You successfully left the game.")
+    return redirect(url_for("profile"))
+
 # ==================== PROFILE =======================
 # User Profile with info and stats and stuff
 
@@ -295,13 +344,15 @@ def profile():
     if "user" not in session:
         return redirect(url_for('root'))
     username = session['user']
+    print username
     userID = db.getUserID(username)
     name = db.getName(username)
     games = db.getGames(userID)
     gameIDs = db.getGamesID(userID)
     playing, p = db.getPlaying(userID)
+    finished = db.getFinishedGames()
     extension = db.getExtension(userID)
-    return render_template("profile.html", username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), extension=extension, is_own=True, loggedin=True)
+    return render_template("profile.html", username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):
@@ -316,11 +367,40 @@ def profileWithID(idd):
     games = db.getGames(idd)
     gameIDs = db.getGamesID(idd)
     playing, p = db.getPlaying(idd)
+    finished = db.getFinishedGames()
     extension = db.getExtension(idd)
-    return render_template("profile.html", username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), extension=extension, is_own=False, loggedin=True)
+    return render_template("profile.html", username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
+
+@my_app.route('/changeaccount', methods=['GET', 'POST'])
+def changeaccount():
+    if "user" not in session:
+        return redirect(url_for("root"))
+    possibilities = ["name", "username", "password"]
+    for i in possibilities:
+        try:
+            changed = request.form[i]
+            if i == "password":
+                check = request.form["confirm"]
+                if changed != check:
+                    flash("Passwords did not match.")
+                    continue
+            if changed != "":
+                db.changeAccountSettings(session["user"], changed, i)
+                if i == "username":
+                    session["user"] = changed
+        except:
+            if i == "password":
+                flash("Passwords did not match.")
+                continue
+            print i, "didn't work"
+            print "Unexpected error:", sys.exc_info()
+    flash("Changed account settings.")
+    return redirect(url_for("profile"))
 
 @my_app.route('/upload', methods=['GET', 'POST'])
 def upload():
+    if "user" not in session:
+        return redirect(url_for("root"))
     if 'file' not in request.files:
         flash('No file part')
         return redirect(url_for(profile))
