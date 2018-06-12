@@ -20,6 +20,7 @@ game keys:
 - safeZones
 - players
 - playersAlive
+- playerAlive
 -->
 
 {% block title %}
@@ -42,7 +43,7 @@ game keys:
       </div>
       {% else %}
       <div class="row">
-      	<h2>Manager: {{game['adminname']}}</h2>
+      	<h2>Manager: <a href="/profile/{{game['managerID']}}">{{game['adminname']}}</a></h2>
       </div>
       {% endif %}
       <div class="row">
@@ -74,9 +75,9 @@ game keys:
 
         <div id="feed" class="tab-pane fade show active">
           <h3>Feed</h3>
-          <p>
-            content
-          </p>
+          {% for i in feed %}
+          <p>{{i}}</p>
+          {% endfor %}
         </div>
 
         <div id="rules" class="tab-pane fade">
@@ -96,7 +97,7 @@ game keys:
         <div id="players" class="tab-pane fade">
           <h3>Players</h3>
           <br>
-          {% if started == 0 %}
+          {% if game["started"] == 0 %}
           {% for playerID, player in game["players"] %}
           <p>
             <a href="/profile/{{playerID}}">{{player}}</a>
@@ -131,10 +132,16 @@ game keys:
           <p>
             Target Name: <a href="/profile/{{game['targetID']}}">{{game["targetname"]}}</a>
           </p>
+          {% if game["submitted"] == 0 and game["playerAlive"] %}
           <form action = "/submit_kill/{{game['gameID']}}" method = "POST">
             <button class="btn btn-sml btn-primary btn-block" name="timefordeath" value = "kill"> Mark Kill </button>
             <button class="btn btn-sml btn-primary btn-block" name="timefordeath" value = "death"> Mark Death </button>
           </form>
+          {% elif game["submitted"] == 1 %}
+          <p>You've already submitted a death; hold on tight for the other person to confirm!</p>
+          {% else %}
+          <p>Sorry, but you have died. Stay tuned for the winner!</p>
+          {% endif %}
           {% elif game["started"] == 0 %}
           <p>The game hasn't started yet; hold on tight!</p>
           <br>
@@ -154,6 +161,11 @@ game keys:
         <div id="admin" class="tab-pane fade">
           <h3>Administrative Things</h3>
           <br>
+          <form action="/announcements" method="POST">
+          	Make an annoucement (it will go to feed):<br>
+          	<input type="text" name="announcement" class="form-control"><br><br>
+          	<button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Submit</button>
+          </form><br>
           {% if game["started"] == 0 or game["started"] == 1 %}
           <p>Change some stuff about the game here!</p>
           <form action="/changegame" method="POST">
@@ -175,6 +187,12 @@ game keys:
           	<button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Submit changes</button>
           </form>
           <br>
+          {% if game["type"] == "Assassins - Rapid Fire" and game["started"] == 1 %}
+          <form action="/regeneratetargets" method="POST">
+            <button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Regenerate targets!</button>
+          </form>
+          <br>
+          {% endif %}
           {% if game["started"] == 0 %}
           <form action="/startgame" method="POST">
             <button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Start the game!</button>

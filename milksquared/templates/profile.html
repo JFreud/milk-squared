@@ -40,6 +40,7 @@
 
         <div id="playing" class="tab-pane fade show active">
           <h3>Games Playing</h3>
+          <br>
           <ul>
             {% for game, gameID in playing %}
             {% if gameID not in finished %}
@@ -51,6 +52,7 @@
 
         <div id="managing" class="tab-pane fade">
           <h3>Games Managing</h3>
+          <br>
           <ul>
             {% for game,gameID in games %}
             <li><a href = {{url_for('game', idd = gameID)}}>{{game}}</a></li>
@@ -60,11 +62,14 @@
 
         <div id="past" class="tab-pane fade">
           <h3>Past Games</h3>
+          <br>
+          <ul>
             {% for game, gameID in playing %}
             {% if gameID in finished %}
             <li><a href = {{url_for('game', idd = gameID)}}>{{game}}</a></li>
             {% endif %}
             {% endfor %}
+          </ul>
         </div>
 
         <div id="stats" class="tab-pane fade">

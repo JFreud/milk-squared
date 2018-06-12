@@ -9,12 +9,13 @@ def createDatabase():
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, type INTEGER, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT, started INTEGER);"
     c.execute(cm)
-    cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER);"
+    cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER, submitted INTEGER);"
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT);"
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS rules (gameID INTEGER, type INTEGER, maxPeople INTEGER, safeZones TEXT);"
     c.execute(cm)
+    cm = "CREATE TABLE IF NOT EXISTS feed (gameID INTEGER, message INTEGER);"
     closeDatabase(db)
 
 def openDatabase():
@@ -106,7 +107,9 @@ def checkKey(key):
 def joinGame(gameID, userID):
     #adds player into a game
     db, c = openDatabase()
-    cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0);' %(gameID, userID)
+    cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0, 0);' %(gameID, userID)
+    c.execute(cm)
+    cm = 'INSERT INTO feed VALUES (%d, "%s has joined the game.");' %(gameID, getUsername(userID))
     c.execute(cm)
     closeDatabase(db)
 
@@ -114,6 +117,8 @@ def leaveGame(userID, gameID):
     #removes player from game
     db, c = openDatabase()
     cm = 'DELETE FROM players WHERE gameID == %d and userID == %d;' %(gameID, userID)
+    c.execute(cm)
+    cm = 'INSERT INTO feed VALUES (%d, "%s has left the game.");' %(gameID, getUsername(userID))
     c.execute(cm)
     closeDatabase(db)
 
@@ -130,6 +135,7 @@ def changeGameSettings(gameID, changed, column):
     else:
         cm = 'UPDATE games SET %s = "%s" WHERE gameID = %d;' %(column, changed, gameID)
     c.execute(cm)
+    cm = 'INSERT INTO feed VALUES(%d, "The admin has updated the %s.");' (gameID, column)
     closeDatabase(db)
 
 # END FUNCTIONS
@@ -265,7 +271,7 @@ def getPlaying(userID):
 
 def getPlayersAlive(gameID):
     db, c = openDatabase()
-    cm = "SELECT * FROM players WHERE gameID = %d AND dead = 0" %gameID
+    cm = "SELECT * FROM players WHERE gameID == %d AND dead == 0;" %gameID
     listy = []
     for i in c.execute(cm):
         listy.append(i[1])
@@ -274,12 +280,20 @@ def getPlayersAlive(gameID):
 
 def getFinishedGames():
     db, c = openDatabase()
-    cm = "SELECT gameID FROM games WHERE started = 2" 
+    cm = "SELECT gameID FROM games WHERE started == 2;" 
     listy = []
     for i in c.execute(cm):
         listy.append(i[0])
     closeDatabase(db)
     return listy
+
+def getSubmitted(userID, gameID):
+    db, c = openDatabase()
+    cm = 'SELECT submitted FROM players WHERE gameID == %d AND userID == %d;' %(gameID, userID)
+    x = -1
+    for i in c.execute(cm):
+        x = i[0]
+    return x
 
 def getMaxPlayers(gameID):
     db, c = openDatabase()
@@ -309,17 +323,43 @@ def getGameInfo(gameID):
     closeDatabase(db)
     return returned
 
+def getFeed(gameID):
+    db, c = openDatabase()
+    cm = 'SELECT message FROM feed WHERE gameID == %d;' %gameID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[0])
+    return listy[:-1]
+
 # GAME PROGRESSION
 
 def startgame(gameID):
     db, c = openDatabase()
     cm = 'UPDATE games SET started = 1 WHERE gameID == %d' %gameID
     c.execute(cm)
+    cm = 'INSERT INTO feed VALUES (%d, "The game has started.");' %(gameID)
+    c.execute(cm)
+    closeDatabase(db)
+
+def restartgame(gameID):
+    db, c = openDatabase()
+    cm = 'UPDATE players SET dead = 0 WHERE gameID == %d' %gameID
+    c.execute(cm)
+    cm = 'INSERT INTO feed VALUES (%d, "Targets have been reassigned.");' %(gameID)
+    c.execute(cm)
     closeDatabase(db)
 
 def endgame(gameID):
     db, c = openDatabase()
     cm = 'UPDATE games SET started = 2 WHERE gameID == %d' %gameID
+    c.execute(cm)
+    cm = 'INSERT INTO feed VALUES (%d, "The game has ended.");' %(gameID)
+    c.execute(cm)
+    closeDatabase(db)
+
+def makeAnnouncement(gameID, announcement):
+    db, c = openDatabase()
+    cm = 'INSERT INTO feed VALUES (%d, "%s");' %(gameID, announcement)
     c.execute(cm)
     closeDatabase(db)
 
@@ -333,6 +373,8 @@ def killTarget(userID, targetID, gameID, time, date):
     else:
         cm = 'INSERT INTO kills VALUES(%d, %d, %d, %d, "%s", "%s");' % (gameID, targetID, userID, 0, date, time)
         c.execute(cm)
+        cm = 'UPDATE players SET submitted = 1 WHERE userID == %d AND gameID == %d;' %(userID, gameID)
+        c.execute(cm)
         returned = False
     closeDatabase(db)
     return returned
@@ -344,15 +386,20 @@ def confirmKill(userID, gameID, targetID):
     closeDatabase(db)
     db, c = openDatabase()
     targetsquared = getTarget(targetID, gameID, True)
-    if (targetsquared == userID):
-        #user won the game
-        pass
-    else:
-        setTarget(userID, gameID, targetsquared)
     cm = 'UPDATE players SET totalkills = totalkills + 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
     c.execute(cm)
     cm = 'UPDATE players SET dead = 1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
     c.execute(cm)
+    cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
+    c.execute(cm)
+    cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+    c.execute(cm)
+    cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.")' %(gameID, getUsername(userID), getUsername(targetID))
+    if (targetsquared == userID):
+        cm = 'INSERT INTO feed VALUES (%d, "The winner is %d.");' %(gameID, db.getUsername(userID))
+        c.execute(cm)
+    else:
+        setTarget(userID, gameID, targetsquared)
     closeDatabase(db)
 
 def alreadySubmitted(userID, targetID, gameID):

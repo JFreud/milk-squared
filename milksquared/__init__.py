@@ -206,11 +206,13 @@ def game(idd):
         flash("Game is invalid.")
         return redirect(url_for("profile"))
     gamee = db.getGameInfo(idd)
-    gamee["adminname"] = db.getUsername(gamee["managerID"])
+    gamee["adminname"] = db.getName(db.getUsername(gamee["managerID"]))
     gamee["targetID"] = db.getTarget(db.getUserID(session["user"]), idd, True)
     playerIDs, players = db.getPlayers(idd)
     gamee["players"] = zip(playerIDs, players)
     gamee["playersAlive"] = db.getPlayersAlive(idd)
+    gamee["playerAlive"] = db.getUserID(session["user"]) in gamee["playersAlive"]
+    gamee['submitted'] = db.getSubmitted(db.getUserID(session["user"]), idd)
     print gamee["players"]
     if gamee["targetID"] >= 0:
         gamee["targetname"] = db.getName(db.getUsername(gamee["targetID"]))
@@ -221,7 +223,8 @@ def game(idd):
     managing = idd in db.getGamesID(db.getUserID(session["user"]))
     p, playing = db.getPlaying(db.getUserID(session["user"]))
     play = idd in playing
-    return render_template("game.html", game=gamee, admin=managing, playing=play, loggedin=True)
+    feed = db.getFeed(idd)
+    return render_template("game.html", game=gamee, admin=managing, playing=play, feed=feed, loggedin=True)
 
 @my_app.route('/startgame', methods=["POST"])
 def startgame():
@@ -236,6 +239,16 @@ def startgame():
     db.startgame(gameID)
     flash("Game has started.")
     return redirect(url_for("game", idd = gameID))
+
+@my_app.route('/regeneratetargets', methods=["POST"])
+def regenerateTargets():
+    if "user" not in session:
+        return redirect(url_for('root'))
+    gameID = int(request.form["gameID"])
+    gameutils.assign_targets(gameID)
+    db.restartgame(gameID)
+    flash("Targets have been reassigned.")
+    return redirect(url_for("game", idd=gameID))
 
 @my_app.route('/endgame/<idd>', methods=["POST"])
 def endgame(idd):
@@ -266,7 +279,7 @@ def submit_kill(idd):
         n = len(db.getPlayersAlive(idd))
         if n == 1:
             flash("The winner of the game has been determined!")
-            return redirect(url_for("endgame", idd=idd))
+            return endgame(idd)
         else:
             flash("Kill was confirmed.")
     elif typ == "kill":
@@ -274,6 +287,19 @@ def submit_kill(idd):
     else:
         flash("Death was submitted; please wait for your killer to confirm your death.")
     return redirect(url_for("game", idd=idd))
+
+@my_app.route('/annoucements', methods=["POST"])
+def annoucements():
+    if "user" not in session:
+        return redirect(url_for('root'))
+    gameID = int(request.form["gameID"])
+    announcement = request.form["announcement"]
+    if announcement == "":
+        flash("You can't have an announcement that says nothing!")
+        return redirect(url_for("game", idd=gameID))
+    db.makeAnnouncement(gameID, announcement)
+    flash("Announcement added to feed.")
+    return redirect(url_for("game", idd=gameID))
 
 @my_app.route('/changegame', methods=["POST"])
 def changegame():
@@ -318,8 +344,12 @@ def checkkey():
         flash("The key you entered is invalid. Please try again.")
         return redirect(url_for("fndgame"))
     elif game not in db.getGamesID(db.getUserID(session["user"])):
-        if len(db.getPlayers(game)) == db.getMaxPlayers(game):
+        p0, p1 = db.getPlayers(game)
+        if len(p0) == db.getMaxPlayers(game):
             flash("The game you're trying to join already has its max number of players.")
+            return redirect(url_for("fndgame"))
+        if db.getUserID(session["user"]) in p0:
+            flash("You've already joined this game!")
             return redirect(url_for("game", idd=game))
         db.joinGame(game, db.getUserID(session["user"]))
         flash("Joined game " + str(game))
