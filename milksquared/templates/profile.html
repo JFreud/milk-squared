@@ -18,7 +18,7 @@
         <h2>Username: {{username}}</h2>
       </div>
       <div class="row">
-        <img src = "../static/pfps/{{userID}}.{{extension}}" height = "300" width = "300" alt = "pfp">
+        <img src = "../static/pfps/{{userID}}.{{extension}}" onerror="this.src='../static/pfps/default.jpg'" height = "300" width = "300" alt = "pfp">
       </div>
     </div>
 
@@ -74,9 +74,6 @@
 
         <div id="stats" class="tab-pane fade">
           <h3>Stats</h3>
-          <p>
-            stat stuff we'll do later
-          </p>
           <div class = "container">
             <div class = "row">
               <div class = "col">

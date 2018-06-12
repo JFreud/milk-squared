@@ -101,3 +101,4 @@ started to work on fxn to get num games won but have to think more about algorit
 
 freudenbergJ - 2018-06-12 15:21:07
 added grid with player stats to profile.html
+added default picture if user does not set pfp
