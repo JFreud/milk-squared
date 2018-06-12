@@ -28,8 +28,8 @@ var makeBar = function() {
 
   var chart = d3.select(".chart");
   var margin = {top: 50, right: 50, bottom: 20, left: 20}
-  var height = 400 - margin.top - margin.bottom;
-  var width = 550 - margin.left - margin.right;
+  var height = 400;
+  var width = 550;
   var spacing = 10;
   console.log(height);
   console.log(width);

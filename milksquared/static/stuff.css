@@ -53,8 +53,11 @@ head{
     //color: #95DEE3;
 }
 
-rect{
-  color: red;
+svg {
+  border-width: 5px;
+  border-style: dashed;
+  border-color: lightsteelblue;
+
 }
 
 .nav-lt{

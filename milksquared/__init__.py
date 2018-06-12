@@ -296,7 +296,7 @@ def submit_kill(idd):
         flash("Death was submitted; please wait for your killer to confirm your death.")
     return redirect(url_for("game", idd=idd))
 
-@my_app.route('/annoucements', methods=["POST"])
+@my_app.route('/announcements', methods=["POST"])
 def annoucements():
     if "user" not in session:
         return redirect(url_for('root'))
