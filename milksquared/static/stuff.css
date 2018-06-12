@@ -57,7 +57,15 @@ svg {
   border-width: 5px;
   border-style: dashed;
   border-color: lightsteelblue;
+}
 
+.arc text {
+  font: 11px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
 }
 
 .nav-lt{

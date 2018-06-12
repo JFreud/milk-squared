@@ -114,3 +114,6 @@ bar chart mostly works now. Added labels + margins + spacing. Still ugly but rec
 styling edits
 fixed typo in route to allow announcements. Still one feed behind.
 fixed typo in feed reversal that cut off most recent one.
+
+freudenbergJ -- 2018-06-12 19:35:51
+added pie chart to game stats that shows num players alive vs num players dead
