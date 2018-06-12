@@ -105,3 +105,6 @@ added default picture if user does not set pfp
 
 freudenbergJ -- 2018-06-12 16:56:39
 ajax call to get game stats from db
+
+freudenbergJ -- 2018-06-12 17:55:31
+added d3 graph. rn it's just big black bars without text but at least it shows up.

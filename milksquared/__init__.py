@@ -231,7 +231,7 @@ def game(idd):
 def gamekillgraph(idd):
     idd = int(idd)
     gamekills = db.getGameKills(idd)
-    response = json.dumps({"gamekills":gamekills, "idd":idd})
+    response = json.dumps({"gamekills":gamekills, })
     return response
 
 @my_app.route('/startgame', methods=["POST"])

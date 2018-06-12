@@ -53,6 +53,10 @@ head{
     //color: #95DEE3;
 }
 
+rect{
+  color: red;
+}
+
 .nav-lt{
     background-color: seashell;
     color: DarkSlateGrey;

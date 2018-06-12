@@ -183,6 +183,12 @@ def getName(username):
     closeDatabase(db)
     return x
 
+def getNameFromID(userID, db, c):
+    cm = 'SELECT name FROM users WHERE userID == %d;' %userID
+    for i in c.execute(cm):
+        x = i[0]
+    return x
+
 def getTarget(userID, gameID, boo):
     db, c = openDatabase()
     if boo:
