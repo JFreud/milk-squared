@@ -344,7 +344,7 @@ def getFeed(gameID):
     for i in c.execute(cm):
         listy.append(i[0])
     closeDatabase(db)
-    return listy[:-1]
+    return listy[::-1]
 
 
 # GAME PROGRESSION

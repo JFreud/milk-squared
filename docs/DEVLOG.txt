@@ -113,3 +113,4 @@ freudenbergJ -- 2018-06-12 18:30:09
 bar chart mostly works now. Added labels + margins + spacing. Still ugly but recognizable.
 styling edits
 fixed typo in route to allow announcements. Still one feed behind.
+fixed typo in feed reversal that cut off most recent one.
