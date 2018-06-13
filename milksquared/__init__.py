@@ -46,20 +46,6 @@ def register():
     # do db stuff and make account
     #if request.method == "GET":
     return render_template('register.html', loggedin=False)
-    '''else:
-        user = request.form['username']
-        passw = request.form['password']
-
-        conf = request.form['confirm']
-        print user, name, passw, conf
-        if not passw == conf:
-            flash("Passwords do not match.")
-            return render_template('register.html')
-        if not db.checkUsernames(user):
-            db.register(user,passw,name)
-            return redirect(url_for('login'))'''
-
-
 
 @my_app.route('/user_creation', methods=['POST'])
 def user_creation():
@@ -119,17 +105,6 @@ def logout():
 def mkgame():
    if "user" not in session:
        return redirect(url_for('root'))
-   # elif request.method == "POST":
-   #     username = session['user']
-   #     gameMode = request.form['gameMode']
-   #     startDate = request.form['startDate']
-   #     endDate = request.form['endDate']
-   #     adminID = db.getUserID(username)
-   #     joinKey = request.form['joinKey']
-   #     title = request.form['title']
-   #     description = request.form['description']
-   #     db.crGame(adminID, joinKey, gameMode, startDate, endDate, title, description)
-   #     return redirect(url_for('profile'))
    else:
        return render_template("mkgame.html", loggedin=True)
 
@@ -507,11 +482,6 @@ def upload():
 @my_app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(my_app.config['UPLOAD_FOLDER'], filename)
-
-
-
-
-
 
 if __name__ == "__main__":
     my_app.debug = True #DANGER DANGER! Set to FALSE before deployment!

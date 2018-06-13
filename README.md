@@ -5,7 +5,7 @@
 
 
 ### Description
-Our website is intended as a resource for groups of people (or individuals looking for a group) to come together and play assassina. The site offers both versions (rapid fire and last man standing) with customizable options. Users create an account and are able to join games using a randomly generated key procured from the person running the game, as well as start a game of their own. The website manages these games for the people playing, including matching people with random targets and keeping track of associated data like kills and players left. The site also tracks user activities as well as the progress of a game and will statistics and graphs based on this data. This means users can look up a game and see stats about it like who has the most kills and can look up user profiles to see their match history and game averages. Ultimately, the site is a great place to have fun with your peers without the additional hassle of having to manage the games yourself.
+Our website is intended as a resource for groups of people (or individuals looking for a group) to come together and play assassins. The site offers both versions (rapid fire and last man standing) with customizable options. Users create an account and are able to join games using a randomly generated key procured from the person running the game, as well as start a game of their own. The website manages these games for the people playing, including matching people with random targets and keeping track of associated data like kills and players left. The site also tracks user activities as well as the progress of a game and will statistics and graphs based on this data. This means users can look up a game and see stats about it like who has the most kills and can look up user profiles to see their match history and game averages. Ultimately, the site is a great place to have fun with your peers without the additional hassle of having to manage the games yourself.
 
 ## Video Link
 <insert later>
@@ -31,7 +31,6 @@ Our website is intended as a resource for groups of people (or individuals looki
 - can't have too many people playing because of concurrency issues with sqlite.
 - svg graphs don't work on safari, we get a typeerror because getElementById can't find the svg. (It works on Chrome and Firefox)
  - this is probably because the script is defined at the top but the function isn't called till later
-- no ranking system (as in first place, second place, third...). So we also can't check how many games a player has won.
 - no way for an admin to handle a discrepancy
 
 ## File Structure
