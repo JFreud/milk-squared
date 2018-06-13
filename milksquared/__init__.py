@@ -266,7 +266,7 @@ def submit_kill(idd):
     confirmed = db.killTarget(userID, targetID, idd, time, date)
     if confirmed:
         n = len(db.getPlayersAlive(idd))
-        if n == 1:
+        if n == 1 and db.getGameType(idd) == "Assassins - Last Man Standing":
             flash("The winner of the game has been determined!")
             return endgame(idd)
         else:
@@ -276,6 +276,47 @@ def submit_kill(idd):
     else:
         flash("Death was submitted; please wait for your killer to confirm your death.")
     return redirect(url_for("game", idd=idd))
+
+# COMMENCE ADMIN STUFF 
+
+@my_app.route('/checkzedeaths', methods=["POST"])
+def checkzedeaths():
+    if "user" not in session:
+        return redirect(url_for('root'))
+    try:
+        gameID = int(request.form["gameID"])
+    except:
+        flash("You can't see this page!")
+        return redirect(url_for("profile"))
+    unconfirmed = db.getUnconfirmedDeaths(gameID)
+    return render_template("discrepancy.html", unconfirmed=unconfirmed, gameID=gameID, loggedin=True)
+
+@my_app.route('/confirmDeath/<userID>/<targetID>', methods=["POST"])
+def confirmDeath(userID, targetID):
+    if "user" not in session:
+        return redirect(url_for('root'))
+    gameID = int(request.form["gameID"])
+    userID = db.getIDFromName(userID)
+    targetID = db.getIDFromName(targetID)
+    current = datetime.now()
+    date = str(current.year) + "-" + str(current.month) + "-" + str(current.day)
+    time = str(current.hour) + ":" + str(current.minute) + ":" + str(current.second)
+    db.killTarget(userID, targetID, gameID, time, date)
+    flash("Confirmed death.")
+    if len(db.getPlayersAlive(gameID)) == 1:
+        flash("The winner of the game has been determined!")
+    return redirect(url_for("game", idd=gameID))
+
+@my_app.route('/removeDeath/<userID>/<targetID>', methods=["POST"])
+def removeDeath(userID, targetID):
+    if "user" not in session:
+        return redirect(url_for('root'))
+    gameID = int(request.form["gameID"])
+    userID = db.getIDFromName(userID)
+    targetID = db.getIDFromName(targetID)
+    db.removeDeath(userID, targetID, gameID)
+    flash("Removed death.")
+    return redirect(url_for("game", idd=gameID))
 
 @my_app.route('/announcements', methods=["POST"])
 def annoucements():

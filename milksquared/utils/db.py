@@ -191,6 +191,14 @@ def getNameFromID(userID):
     closeDatabase(db)
     return x
 
+def getIDFromName(name):
+    db, c = openDatabase()
+    cm = 'SELECT userID FROM users WHERE name == "%s";' %name
+    for i in c.execute(cm):
+        x = i[0]
+    closeDatabase(db)
+    return x
+
 def getTarget(userID, gameID, boo):
     db, c = openDatabase()
     if boo:
@@ -443,7 +451,6 @@ def confirmKill(userID, gameID, targetID, db, c):
         setNewTarget(userID, gameID, targetsquared, db, c)
     # closeDatabase(db)
 
-
 def alreadySubmitted(userID, targetID, gameID, db, c):
     # db, c = openDatabase()
     cm = "SELECT * FROM kills WHERE userWhoKilledID == %d AND userKilledID == %d AND gameID == %d;" %(userID, targetID, gameID)
@@ -452,6 +459,29 @@ def alreadySubmitted(userID, targetID, gameID, db, c):
         x = True
     # closeDatabase(db)
     return x
+
+def getUnconfirmedDeaths(gameID):
+    # something for the admin
+    db, c = openDatabase()
+    cm = 'SELECT * FROM kills WHERE gameID == %d AND confirmed == 0;' %gameID
+    listy = []
+    for i in c.execute(cm):
+        temp = []
+        temp.append(getName(getUsername(i[2])))
+        temp.append(getName(getUsername(i[1])))
+        listy.append(temp)
+    closeDatabase(db)
+    return listy
+
+def removeDeath(userID, targetID, gameID):
+    db, c = openDatabase()
+    cm = 'DELETE FROM kills WHERE gameID == %d AND userWhoKilledID == %d AND userKilledID == %d;' %(gameID, userID, targetID)
+    c.execute(cm)
+    cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
+    c.execute(cm)
+    cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
+    c.execute(cm)
+    closeDatabase(db)
 
 # PLAYER STATS STUFFS
 

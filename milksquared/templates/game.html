@@ -200,6 +200,12 @@ game keys:
           	<button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Submit changes</button>
           </form>
           <br>
+          {% if game["started"] == 1 %}
+          <form action="/checkzedeaths" method="POST">
+          	<button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Check unconfirmed deaths!</button>
+          </form>
+          <br>
+          {% endif %}
           {% if game["type"] == "Assassins - Rapid Fire" and game["started"] == 1 %}
           <form action="/regeneratetargets" method="POST">
             <button class="btn btn-sml btn-primary btn-block" type="submit" name="gameID" value="{{game['gameID']}}">Regenerate targets!</button>

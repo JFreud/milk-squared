@@ -123,4 +123,6 @@ added place column and functions for determining first, second, third, etc... pl
 num games won function
 
 tiffanyC -- 2018-06-13 01:04:03
-fixed a couple bugs and cleaned up the homepage and the readme
+fixed a couple bugs and cleaned up the homepage and the readmetiffanyC -- 2018-06-12 23:20:02
+okay so i made a thing where an admin can do discrepancies for deaths and rapid fire should work better (that is, the game shouldn't end if there is one person left at the end of the day)
+
