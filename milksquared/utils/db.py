@@ -384,7 +384,7 @@ def startgame(gameID):
 
 def restartgame(gameID):
     db, c = openDatabase()
-    cm = 'UPDATE players SET dead = 0 WHERE gameID == %d' %gameID
+    cm = 'UPDATE players SET dead = 0 AND confirmed = 0 WHERE gameID == %d' %gameID
     c.execute(cm)
     cm = 'DELETE FROM kills WHERE gameID == %d;' %(gameID)
     c.execute(cm)
@@ -443,12 +443,12 @@ def confirmKill(userID, gameID, targetID, db, c):
     cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.");' %(gameID, getName(getUsername(userID)), getName(getUsername(targetID)))
     c.execute(cm)
     playersLeft = len(getRemaining(gameID, db, c))
-    cm = 'UPDATE players SET place = %d WHERE userID == %d;' % (playersLeft + 1, targetID)
+    cm = 'UPDATE players SET place = %d WHERE userID == %d AND gameID == %d;' % (playersLeft + 1, targetID, gameID)
     c.execute(cm)
     if (playersLeft == 1 and getGameType == "Assassins - Last Man Standing"):
         cm = 'INSERT INTO feed VALUES (%d, "The winner is %s.");' %(gameID, getName(getUsername(userID)))
         c.execute(cm)
-        cm = 'UPDATE players SET place = 1 WHERE userID == %d;' % userID
+        cm = 'UPDATE players SET place = 1 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
         c.execute(cm)
     else:
         setNewTarget(userID, gameID, targetsquared, db, c)
@@ -493,9 +493,12 @@ def makeRapidFireRanking(gameID):
     listy = []
     listykills = []
     cm = "SELECT userID, totalkills FROM players WHERE gameID == %d ORDER BY totalKills;" % (gameID)
+    x = 1
     for i in c.execute(cm):
         listy.append(i[0]) # appends userID in order of totalkills
         listykills.append(i[1])
+        cm = 'UPDATE players SET place = 1 WHERE userID == %d AND gameID == %d;' % (i[0], gameID)
+        c.execute(cm)
     closeDatabase(db)
     return listy, listykills
 
