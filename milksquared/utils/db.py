@@ -9,7 +9,7 @@ def createDatabase():
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS games (gameID INTEGER PRIMARY KEY, managerID INTEGER, key TEXT, type INTEGER, dateStart TEXT, dateEnd TEXT, title TEXT, description TEXT, started INTEGER);"
     c.execute(cm)
-    cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER, submitted INTEGER);"
+    cm = "CREATE TABLE IF NOT EXISTS players (gameID INTEGER, userID INTEGER, dead INTEGER, targetID INTEGER, totalKills INTEGER, submitted INTEGER, place INTEGER);"
     c.execute(cm)
     cm = "CREATE TABLE IF NOT EXISTS kills (gameID INTEGER, userKilledID INTEGER, userWhoKilledID INTEGER, confirmed INTEGER, dateKilled TEXT, timeKilled TEXT);"
     c.execute(cm)
@@ -108,7 +108,7 @@ def checkKey(key):
 def joinGame(gameID, userID):
     #adds player into a game
     db, c = openDatabase()
-    cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0, 0);' %(gameID, userID)
+    cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0, 0, 0);' %(gameID, userID)
     c.execute(cm)
     cm = 'INSERT INTO feed VALUES (%d, "%s has joined the game.");' %(gameID, getUsername(userID))
     c.execute(cm)
@@ -291,6 +291,13 @@ def getPlayersAlive(gameID):
     closeDatabase(db)
     return listy
 
+def getRemaining(gameID, db, c):
+    cm = "SELECT * FROM players WHERE gameID == %d AND dead == 0;" %gameID
+    listy = []
+    for i in c.execute(cm):
+        listy.append(i[1])
+    return listy
+
 def getFinishedGames():
     db, c = openDatabase()
     cm = "SELECT gameID FROM games WHERE started == 2;"
@@ -303,6 +310,15 @@ def getFinishedGames():
 def getSubmitted(userID, gameID):
     db, c = openDatabase()
     cm = 'SELECT submitted FROM players WHERE gameID == %d AND userID == %d;' %(gameID, userID)
+    x = -1
+    for i in c.execute(cm):
+        x = i[0]
+    closeDatabase(db)
+    return x
+
+def getGameType(gameID):
+    db, c = openDatabase()
+    cm = 'SELECT type FROM games WHERE gameID == %d' % gameID
     x = -1
     for i in c.execute(cm):
         x = i[0]
@@ -411,13 +427,20 @@ def confirmKill(userID, gameID, targetID, db, c):
     c.execute(cm)
     cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
     c.execute(cm)
-    cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.")' %(gameID, getUsername(userID), getUsername(targetID))
+    cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.");' %(gameID, getUsername(userID), getUsername(targetID))
+    c.execute(cm)
+    playersLeft = len(getRemaining(gameID, db, c))
+    cm = 'UPDATE players SET place = %d WHERE userID == %d;' % (playersLeft + 1, targetID)
+    c.execute(cm)
     if (targetsquared == userID):
         cm = 'INSERT INTO feed VALUES (%d, "The winner is %d.");' %(gameID, db.getUsername(userID))
+        c.execute(cm)
+        cm = 'UPDATE players SET place = 1 WHERE userID == %d;' % userID
         c.execute(cm)
     else:
         setNewTarget(userID, gameID, targetsquared, db, c)
     # closeDatabase(db)
+
 
 def alreadySubmitted(userID, targetID, gameID, db, c):
     # db, c = openDatabase()
@@ -429,6 +452,18 @@ def alreadySubmitted(userID, targetID, gameID, db, c):
     return x
 
 # PLAYER STATS STUFFS
+
+def makeRapidFireRanking(gameID):
+    db, c = openDatabase()
+    listy = []
+    listykills = []
+    cm = "SELECT userID, totalkills FROM players WHERE gameID == %d ORDER BY totalKills;" % (gameID)
+    for i in c.execute(cm):
+        listy.append(i[0]) # appends userID in order of totalkills
+        listykills.append(i[1])
+    closeDatabase(db)
+    return listy, listykills
+
 
 #total kills of a player across all games
 def getTotalKills():
