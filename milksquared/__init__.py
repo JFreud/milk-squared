@@ -349,9 +349,8 @@ def changegame():
             if changed != "":
                 db.changeGameSettings(gameID, changed, i)
         except:
-            #print i, "didn't work"
-            #print "Unexpected error:", sys.exc_info()
-            raise
+            print i, "didn't work"
+            print "Unexpected error:", sys.exc_info()
     flash("Changed settings for the game.")
     return redirect(url_for("game", idd=gameID))
 
