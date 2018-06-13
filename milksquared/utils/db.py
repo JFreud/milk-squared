@@ -425,6 +425,8 @@ def confirmKill(userID, gameID, targetID, db, c):
     c.execute(cm)
     cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
     c.execute(cm)
+    cm = 'UPDATE players SET targetID = -1 WHERE userID == %d AND gameID == %d;' % (targetID, gameID)
+    c.execute(cm)
     cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
     c.execute(cm)
     cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.");' %(gameID, getUsername(userID), getUsername(targetID))
