@@ -136,7 +136,7 @@ def changeGameSettings(gameID, changed, column):
     else:
         cm = 'UPDATE games SET %s = "%s" WHERE gameID == %d;' %(column, changed, gameID)
     c.execute(cm)
-    cm = 'INSERT INTO feed VALUES(%d, "The admin has updated the %s.");' %(gameID, column)
+    cm = 'INSERT INTO feed VALUES (%d, "The admin has updated the %s.");' %(gameID, column)
     c.execute(cm)
     closeDatabase(db)
 
