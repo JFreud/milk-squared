@@ -118,3 +118,6 @@ fixed typo in feed reversal that cut off most recent one.
 freudenbergJ -- 2018-06-12 19:35:51
 added pie chart to game stats that shows num players alive vs num players dead
 very minimal home page edits so that it doesn't look blatantly temporary
+
+freudenbergJ -- 2018-06-12 20:21:56
+wrote up readme

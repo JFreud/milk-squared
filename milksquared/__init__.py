@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from os import path, urandom, mkdir, rename
 from utils import db, gameutils
 import random
-import json, urllib2, sys, sqlite3
+import json, sys, sqlite3
 from datetime import date, datetime
 
 import sys
