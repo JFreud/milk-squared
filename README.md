@@ -32,6 +32,7 @@ Our website is intended as a resource for groups of people (or individuals looki
 - svg graphs don't work on safari, we get a typeerror because getElementById can't find the svg. (It works on Chrome and Firefox)
  - this is probably because the script is defined at the top but the function isn't called till later
 - no way for an admin to handle a discrepancy
+- profile pictures sometimes weirdly elongated
 
 ## File Structure
 ```
