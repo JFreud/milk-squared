@@ -5,38 +5,6 @@ Register
 {% endblock %}
 
 {% block body %}
-<!--
-<div class="container-1">
-    <form class="signin" method="POST" action ="/login">
-
-      Name:<br>
-      <input type="text" name="name" required><br><br>
-
-      Username:<br>
-      <input type="text" name="username" required><br><br>
-
-      Password: <br>
-      <input id="password" type="text" name="password" required><br><br>
-      <p id="responsePass" class="response"></p>
-
-      Confirm Password: <br>
-      <input id="confPassw" type="text" name="confPassword" required><br><br>
-      <p id="responsePass2" class="response"></p>
-      <input type="submit" value="submit" class = "button2"> <br> <br>
-    </form>
-
-    <form method="GET" action="/login">
-      Already have an account?
-      <input  type="submit" value="Login" class="button1">
-    </form>
-
-    <script src="static/stuff.js"></script>
-
-</div>
--->
-<!-- </center> -->
-
-
 <div class="container-1">
   {% set messages = get_flashed_messages() %}
   <form method = "POST" action="/user_creation" class="form-signin">

@@ -565,7 +565,7 @@ def averagePlacing(userID):
     for i in c.execute(cm):
         total += i[0]
         count += 1
-    return total / count
+    return total / count if count > 0 else "N/A"
 
 #GAME STATS STUFF
 
