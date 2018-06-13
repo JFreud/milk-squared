@@ -110,7 +110,7 @@ def joinGame(gameID, userID):
     db, c = openDatabase()
     cm = 'INSERT INTO players VALUES (%d, %d, 0, -1, 0, 0, 0);' %(gameID, userID)
     c.execute(cm)
-    cm = 'INSERT INTO feed VALUES (%d, "%s has joined the game.");' %(gameID, getUsername(userID))
+    cm = 'INSERT INTO feed VALUES (%d, "%s has joined the game.");' %(gameID, getName(getUsername(userID)))
     c.execute(cm)
     closeDatabase(db)
 
@@ -119,7 +119,7 @@ def leaveGame(userID, gameID):
     db, c = openDatabase()
     cm = 'DELETE FROM players WHERE gameID == %d and userID == %d;' %(gameID, userID)
     c.execute(cm)
-    cm = 'INSERT INTO feed VALUES (%d, "%s has left the game.");' %(gameID, getUsername(userID))
+    cm = 'INSERT INTO feed VALUES (%d, "%s has left the game.");' %(gameID, getName(getUsername(userID)))
     c.execute(cm)
     closeDatabase(db)
 
@@ -429,13 +429,13 @@ def confirmKill(userID, gameID, targetID, db, c):
     c.execute(cm)
     cm = 'UPDATE players SET submitted = 0 WHERE userID == %d AND gameID == %d;' % (userID, gameID)
     c.execute(cm)
-    cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.");' %(gameID, getUsername(userID), getUsername(targetID))
+    cm = 'INSERT INTO feed VALUES (%d, "%s killed %s.");' %(gameID, getName(getUsername(userID)), getName(getUsername(targetID)))
     c.execute(cm)
     playersLeft = len(getRemaining(gameID, db, c))
     cm = 'UPDATE players SET place = %d WHERE userID == %d;' % (playersLeft + 1, targetID)
     c.execute(cm)
     if (targetsquared == userID):
-        cm = 'INSERT INTO feed VALUES (%d, "The winner is %d.");' %(gameID, db.getUsername(userID))
+        cm = 'INSERT INTO feed VALUES (%d, "The winner is %s.");' %(gameID, getName(getUsername(userID)))
         c.execute(cm)
         cm = 'UPDATE players SET place = 1 WHERE userID == %d;' % userID
         c.execute(cm)

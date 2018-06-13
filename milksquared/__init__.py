@@ -478,7 +478,6 @@ def upload():
         flash("File incompatible.")
         return redirect(url_for('profile'))
 
-
 @my_app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(my_app.config['UPLOAD_FOLDER'], filename)
