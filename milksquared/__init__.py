@@ -245,8 +245,8 @@ def endgame(idd):
     flash("Game has ended.")
     if db.getGameType(idd) == "Assassins - Rapid Fire":
         rankings, kills = db.makeRapidFireRanking(idd)
-        flash("The winner is %s with %d kills." %(getName(getUsername(rankings[0])), kills[0]))
-        db.makeAnnouncement(idd, "The winner is %s with %d kills." %(getName(getUsername(rankings[0])), kills[0]))
+        flash("The winner is %s with %d kills." %(db.getName(db.getUsername(rankings[0])), kills[0]))
+        db.makeAnnouncement(idd, "The winner is %s with %d kills." %(db.getName(db.getUsername(rankings[0])), kills[0]))
     return redirect(url_for("game", idd=idd))
 
 @my_app.route('/submit_kill/<idd>', methods = ['POST'])
