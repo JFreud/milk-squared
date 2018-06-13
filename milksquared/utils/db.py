@@ -519,6 +519,7 @@ def getNumGamesWon(userID):
     cm = "SELECT * FROM players WHERE userID == %d AND place == 1;" % userID
     for i in c.execute(cm):
         count += 1
+    closeDatabase(db)
     return count
 
 

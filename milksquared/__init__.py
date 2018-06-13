@@ -413,7 +413,8 @@ def profile():
         recordkills = recordkills[userID]
     else:
         recordkills = "N/A"
-    return render_template("profile.html", totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
+    gameswon = db.getNumGamesWon(userID)
+    return render_template("profile.html", gameswon=gameswon, totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):
@@ -447,7 +448,8 @@ def profileWithID(idd):
         recordkills = recordkills[idd]
     else:
         recordkills = "N/A"
-    return render_template("profile.html", totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
+    gameswon = db.getNumGamesWon(idd)
+    return render_template("profile.html", gameswon=gameswon, totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
 
 @my_app.route('/changeaccount', methods=['GET', 'POST'])
 def changeaccount():
