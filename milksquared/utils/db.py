@@ -126,17 +126,18 @@ def leaveGame(userID, gameID):
 def changeGameSettings(gameID, changed, column):
     db, c = openDatabase()
     if column == "maxPeople":
-        cm = 'UPDATE rules SET %s = %d WHERE gameID = %d;' %(column, changed, gameID)
+        cm = 'UPDATE rules SET %s = %d WHERE gameID == %d;' %(column, changed, gameID)
     elif column == "safeZones":
-        cm = 'UPDATE rules SET %s = "%s" WHERE gameID = %d;' %(column, changed, gameID)
+        cm = 'UPDATE rules SET %s = "%s" WHERE gameID == %d;' %(column, changed, gameID)
     elif column == "startDate":
-        cm = 'UPDATE games SET dateStart = "%s" WHERE gameID = %d;' %(changed, gameID)
+        cm = 'UPDATE games SET dateStart = "%s" WHERE gameID == %d;' %(changed, gameID)
     elif column == "endDate":
-        cm = 'UPDATE games SET dateEnd = "%s" WHERE gameID = %d;' %(changed, gameID)
+        cm = 'UPDATE games SET dateEnd = "%s" WHERE gameID == %d;' %(changed, gameID)
     else:
-        cm = 'UPDATE games SET %s = "%s" WHERE gameID = %d;' %(column, changed, gameID)
+        cm = 'UPDATE games SET %s = "%s" WHERE gameID == %d;' %(column, changed, gameID)
     c.execute(cm)
     cm = 'INSERT INTO feed VALUES(%d, "The admin has updated the %s.");' %(gameID, column)
+    c.execute(cm)
     closeDatabase(db)
 
 # END FUNCTIONS
