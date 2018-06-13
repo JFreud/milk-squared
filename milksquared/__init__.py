@@ -430,18 +430,18 @@ def profileWithID(idd):
     totalkills = db.getTotalKills()
     gamesplayed = db.getNumGamesPlayed()
     recordkills = db.getRecordKills()
-    if userID in totalkills:
-        totalkills = totalkills[userID]
+    if idd in totalkills:
+        totalkills = totalkills[idd]
     else:
         totalkills = 0
-    if userID in gamesplayed:
-        gamesplayed = gamesplayed[userID]
-        avgkills = db.getAverageKills(userID)
+    if idd in gamesplayed:
+        gamesplayed = gamesplayed[idd]
+        avgkills = db.getAverageKills(idd)
     else:
         gamesplayed = 0
         avgkills = "N/A"
-    if userID in recordkills:
-        recordkills = recordkills[userID]
+    if idd in recordkills:
+        recordkills = recordkills[idd]
     else:
         recordkills = "N/A"
     return render_template("profile.html", totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)

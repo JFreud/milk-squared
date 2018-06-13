@@ -45,6 +45,11 @@ head{
     //background-color:#034F84;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 #p1{
     //color: #F6D155;
 }
