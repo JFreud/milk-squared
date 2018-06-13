@@ -31,6 +31,7 @@ Our website is intended as a resource for groups of people (or individuals looki
 - can't have too many people playing because of concurrency issues with sqlite
 - svg graphs don't work on safari, we get a typeerror because getElementById can't find the svg. (It works on Chrome and Firefox)
  - this is probably because the script is defined at the top but the function isn't called till later
+- no ranking system (as in first place, second place, third...). So we also can't check how many games a player has won.
 
 ## File Structure
 ```
