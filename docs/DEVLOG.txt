@@ -131,3 +131,6 @@ okay so i made a thing where an admin can do discrepancies for deaths and rapid 
 
 tiffanyC -- 2018-06-12 23:36:24
 did some stuff to make rapid fire work more, but there's still problems with ending the game
+tiffanyC -- 2018-06-13 01:17:48
+went through everything for bugs, hope everything will be fixed once this thing is redeployed
+
