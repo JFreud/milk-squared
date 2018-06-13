@@ -514,18 +514,12 @@ def getAverageKills(userID):
 #number of games a player has won
 def getNumGamesWon(userID):
     #count number of games where everyone else is dead and you are not
-    totalDict = dict()
+    count = 0
     db, c = openDatabase()
-    cm = "SELECT * FROM players;"
-    gameID = 0
-    winner = False
+    cm = "SELECT * FROM players WHERE userID == %d AND place == 1;" % userID
     for i in c.execute(cm):
-        # if i[0] == gameID and i[2] == 0 and winner == False:
-        #     winner == True
-        # elif i[0] == gameID and i[2] == 0 and winner == True:
-        #     winner == False
-        pass
-    return
+        count += 1
+    return count
 
 
 #GAME STATS STUFF

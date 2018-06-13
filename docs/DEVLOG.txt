@@ -120,3 +120,4 @@ wrote up readme
 
 freudenbergJ -- 2018-06-13 00:06:32
 added place column and functions for determining first, second, third, etc... places
+num games won function
