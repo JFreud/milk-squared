@@ -385,6 +385,8 @@ def restartgame(gameID):
     db, c = openDatabase()
     cm = 'UPDATE players SET dead = 0 WHERE gameID == %d' %gameID
     c.execute(cm)
+    cm = 'DELETE FROM kills WHERE gameID == %d;' %(gameID)
+    c.execute(cm)
     cm = 'INSERT INTO feed VALUES (%d, "Targets have been reassigned.");' %(gameID)
     c.execute(cm)
     closeDatabase(db)
