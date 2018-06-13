@@ -123,13 +123,11 @@ added place column and functions for determining first, second, third, etc... pl
 num games won function
 avg place fxn + display
 
-tiffanyC -- 2018-06-13 01:04:03
-fixed a couple bugs and cleaned up the homepage and the readmetiffanyC -- 2018-06-12 23:20:02
+tiffanyC -- 2018-06-13 23:04:03
+fixed a couple bugs and cleaned up the homepage and the readme
+
+tiffanyC -- 2018-06-12 23:20:02
 okay so i made a thing where an admin can do discrepancies for deaths and rapid fire should work better (that is, the game shouldn't end if there is one person left at the end of the day)
-<<<<<<< HEAD
 
 tiffanyC -- 2018-06-12 23:36:24
 did some stuff to make rapid fire work more, but there's still problems with ending the game
-
-=======
->>>>>>> a2219e930556a525f0b667c0826c9e89073b050f
