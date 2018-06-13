@@ -434,7 +434,7 @@ def confirmKill(userID, gameID, targetID, db, c):
     playersLeft = len(getRemaining(gameID, db, c))
     cm = 'UPDATE players SET place = %d WHERE userID == %d;' % (playersLeft + 1, targetID)
     c.execute(cm)
-    if (targetsquared == userID):
+    if (playersLeft == 1):
         cm = 'INSERT INTO feed VALUES (%d, "The winner is %s.");' %(gameID, getName(getUsername(userID)))
         c.execute(cm)
         cm = 'UPDATE players SET place = 1 WHERE userID == %d;' % userID
