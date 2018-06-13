@@ -277,7 +277,7 @@ def submit_kill(idd):
         flash("Death was submitted; please wait for your killer to confirm your death.")
     return redirect(url_for("game", idd=idd))
 
-# COMMENCE ADMIN STUFF 
+# COMMENCE ADMIN STUFF
 
 @my_app.route('/checkzedeaths', methods=["POST"])
 def checkzedeaths():
@@ -430,7 +430,8 @@ def profile():
     else:
         recordkills = "N/A"
     gameswon = db.getNumGamesWon(userID)
-    return render_template("profile.html", gameswon=gameswon, totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
+    avgplace = db.averagePlacing(userID)
+    return render_template("profile.html", avgplace=avgplace, gameswon=gameswon, totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=userID, name=name, games=zip(games,gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=True, loggedin=True)
 
 @my_app.route('/profile/<idd>')
 def profileWithID(idd):
@@ -465,7 +466,8 @@ def profileWithID(idd):
     else:
         recordkills = "N/A"
     gameswon = db.getNumGamesWon(idd)
-    return render_template("profile.html", gameswon=gameswon, totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
+    avgplace = db.averagePlacing(idd)
+    return render_template("profile.html", avgplace=avgplace, gameswon=gameswon, totalkills=totalkills, gamesplayed=gamesplayed, avgkills=avgkills, recordkills=recordkills, username=username, userID=idd, name=name, games=zip(games, gameIDs), playing=zip(playing, p), finished=finished, extension=extension, is_own=False, loggedin=True)
 
 @my_app.route('/changeaccount', methods=['GET', 'POST'])
 def changeaccount():
