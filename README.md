@@ -27,11 +27,10 @@ Our website is intended as a resource for groups of people (or individuals looki
 ## Bugs and Issues
 - when you update stuff for the game as an admin and you update only maxNumber with the number being less than 3, the code will flash “must have at least 3 players” and “game settings have been changed” even though no settings would’ve been changed
 - similar problem with changing account settings but with passwords
-- theres no winner mechanism for rapid fire. if one person kills everybody else playing that day it will announce him or her as winner and end the game despite it not actually having ended.
+- some of the last man standing stuff bleeds over to rapid fire so it will announce someone as a winner if they kill everyone else despite the game not having ended.
 - can't have too many people playing because of concurrency issues with sqlite.
 - svg graphs don't work on safari, we get a typeerror because getElementById can't find the svg. (It works on Chrome and Firefox)
  - this is probably because the script is defined at the top but the function isn't called till later
-- no way for an admin to handle a discrepancy
 - profile pictures sometimes weirdly elongated
 
 ## File Structure
