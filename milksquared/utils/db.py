@@ -556,6 +556,16 @@ def getNumGamesWon(userID):
     closeDatabase(db)
     return count
 
+def averagePlacing(userID):
+    #get average post game seeding
+    total = 0.0
+    count = 0.0
+    db, c = openDatabase()
+    cm = "SELECT place FROM players WHERE userID == %d" % userID
+    for i in c.execute(cm):
+        total += i[0]
+        count += 1
+    return total / count
 
 #GAME STATS STUFF
 
