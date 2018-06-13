@@ -303,7 +303,7 @@ def confirmDeath(userID, targetID):
     time = str(current.hour) + ":" + str(current.minute) + ":" + str(current.second)
     db.killTarget(userID, targetID, gameID, time, date)
     flash("Confirmed death.")
-    if len(db.getPlayersAlive(gameID)) == 1:
+    if len(db.getPlayersAlive(gameID)) == 1 and db.getGameType(idd) == "Assassins - Last Man Standing":
         flash("The winner of the game has been determined!")
     return redirect(url_for("game", idd=gameID))
 
